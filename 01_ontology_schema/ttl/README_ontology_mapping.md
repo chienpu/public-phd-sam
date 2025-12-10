@@ -72,20 +72,44 @@ prov:Entity prov:Entity prov:Activity prov:Agent
 - 完整 provenance chain reconstruction  
 - Scenario debugging（PdM / Carbon workflows）
 
----
-
 # 4. Combined Mapping Diagram
 
-（文字版本，可配合 Mermaid 圖使用）
+下圖呈現 IFC、SOSA/SSN、PROV 與 STRIDE/SAM 之間的跨層語意對位。  
+Mermaid 圖示展示了資料如何從感測（Sensor）到觀測（PerformanceData）、  
+再到事件（Anomaly）與後續行動（MaintenanceTask → Actor）之完整語意鏈。
 
-IFC:IfcElement SOSA:Sensor SOSA:Observation PROV:Entity
-↓ ↓ ↓ ↓
-sam:BuildingComponent ← sam:Sensor → sam:PerformanceData → sam:Anomaly
-↓
-sam:MaintenanceTask (prov:Activity)
-↓
-sam:Actor (prov:Agent)
+```mermaid
+graph TD
 
+    %% Upper ontology classes
+    IFC[IFC:IfcElement]
+    SOSA_Sensor[SOSA:Sensor]
+    SOSA_Obs[SOSA:Observation]
+    PROV_Ent[PROV:Entity]
+
+    %% STRIDE / SAM classes
+    BC[sam:BuildingComponent]
+    SEN[sam:Sensor]
+    PD[sam:PerformanceData]
+    ANO[sam:Anomaly]
+    TASK[sam:MaintenanceTask<br/>(prov:Activity)]
+    ACTOR[sam:Actor<br/>(prov:Agent)]
+
+    %% Ontology alignments
+    IFC --> BC
+    SOSA_Sensor --> SEN
+    SOSA_Obs --> PD
+    PROV_Ent --> ANO
+
+    %% STRIDE semantic reasoning chain
+    SEN --> PD
+    PD --> ANO
+    ANO --> TASK
+    TASK --> ACTOR
+```
+
+此圖可視為本研究跨標準語意整合（Interoperability Layer）的核心結構，
+同時支援 PdM（Predictive Maintenance）與碳管理（SID-CM）兩大應用場景。
 
 ---
 
@@ -113,10 +137,10 @@ TTL 為「可讀的語意文件（documentation）」。
 
 本資料夾包含下列對位模型：
 
-interopbim-fm.ttl IFC → SAM core mapping
-sosa.ttl IoT semantics (SOSA minimal subset)
-prov.ttl Provenance semantics (PROV minimal subset)
-README_ontology_mapping.md ← 本文件
+- interopbim-fm.ttl IFC → SAM core mapping
+- sosa.ttl IoT semantics (SOSA minimal subset)
+- prov.ttl Provenance semantics (PROV minimal subset)
+- README_ontology_mapping.md ← 本文件
 
 
 ---
