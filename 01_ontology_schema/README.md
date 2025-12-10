@@ -38,7 +38,7 @@ flowchart TD
     classDef tiaa fill:#E3F2FD,stroke:#1565C0,stroke-width:1.2px,color:#0D47A1;
     classDef sam fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.2px,color:#1B5E20;
     classDef stride fill:#FFF3E0,stroke:#EF6C00,stroke-width:1.2px,color:#E65100;
-    classDef graph fill:#F3E5F5,stroke:#6A1B9A,stroke-width:1.2px,color:#4A148C;
+    classDef graphnode fill:#F3E5F5,stroke:#6A1B9A,stroke-width:1.2px,color:#4A148C;
 
     %% ===========================
     %% TOP LEVEL — TIAA
