@@ -117,7 +117,8 @@ flowchart TD
 │  ├─ sosa.ttl
 │  ├─ prov.ttl
 │  └─ README_ontology_mapping.md
-└─ README.md
+├─ README.md
+└─ schema_specification.md
 ```
 
 ## Neo4j Schema 建立
