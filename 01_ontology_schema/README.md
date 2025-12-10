@@ -6,17 +6,114 @@
 - 與 SOSA / IFC / PROV 等語意標準之對應（TTL）
 - 建立 Neo4j schema 與基礎推理查詢之 Cypher 腳本
 
-## 📖 對應論文章節與附錄
+## 📖 對應論文章節與附錄  
 
-本資料夾主要支援以下論文章節與附錄內容：
-- **第 4 章：語意行動管理（SAM）方法論：理論基礎與形式化模型**  
-  - 尤其是 **4.1 語意行動管理概念模型**、**4.2 圖原生定義**，以及 TIAA／SAM 結構在圖中的表示方式。
-- **第 5 章：STRIDE 框架與系統實作**  
-  - 作為 STRIDE 各層實作的語意上下文（Ontology Schema）。
-- **第 6 章：評估與案例**  
-  - PdM 與 SID–CM 案例的圖結構與多跳推理均依賴此 schema 作為基礎。
+本資料夾對應到論文的以下部分：
 
-換句話說，`01_ontology_schema/` 提供的是上述章節中所有「圖原生語意結構」的實際技術實作對應。
+- **第 4 章 — 語意行動管理（SAM）方法論**  
+  特別是 4.1（語意模型）、4.2（圖原生結構）、4.3（語意規則）。
+
+- **第 5 章 — STRIDE 系統實作**  
+  包含 PdM 與 SID-CM 案例的語意建模與 Neo4j schema。
+
+- **第 6 章 — 評估方法與案例**  
+  所有 traceability、多跳查詢、事件推理均依賴本 schema。
+
+- **Appendix A — Ontology Schema（濃縮版）**  
+  完整版本於本資料夾中。
+
+---
+
+# 📘 Semantic Architecture Overview（Mermaid 圖）
+
+以下為 SAM／STRIDE ontology 在三層語意結構（TIAA → SAM → STRIDE）中的定位，並展示核心 Graph Schema（BuildingComponent, Sensor, PerformanceData, Anomaly, Task, Actor）。
+
+> 此圖將同時用於 Appendix A.1 與研究簡報。
+
+```mermaid
+flowchart TD
+    %% ===========================
+    %% STYLE
+    %% ===========================
+    classDef tiaa fill:#E3F2FD,stroke:#1565C0,stroke-width:1.2px,color:#0D47A1;
+    classDef sam fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.2px,color:#1B5E20;
+    classDef stride fill:#FFF3E0,stroke:#EF6C00,stroke-width:1.2px,color:#E65100;
+    classDef graph fill:#F3E5F5,stroke:#6A1B9A,stroke-width:1.2px,color:#4A148C;
+
+    %% ===========================
+    %% TOP LEVEL — TIAA
+    %% ===========================
+    TIAA["TIAA Semantic Cells
+    (Trigger – Issue – Action – Actor)"]:::tiaa
+
+    Trigger["Trigger"]:::tiaa
+    Issue["Issue"]:::tiaa
+    ActionNode["Action"]:::tiaa
+    ActorNode["Actor"]:::tiaa
+
+    TIAA --> Trigger
+    TIAA --> Issue
+    TIAA --> ActionNode
+    TIAA --> ActorNode
+
+    %% ===========================
+    %% MIDDLE LEVEL — SAM Closed Loop
+    %% ===========================
+    SAM["Semantic Action Management (SAM)
+    Semantic → Traversal → Workflow → Provenance"]:::sam
+
+    Semantic["Semantic Interpretation"]:::sam
+    Traversal["Graph Traversal Reasoning"]:::sam
+    Workflow["Workflow Invocation"]:::sam
+    Provenance["Provenance Recording"]:::sam
+
+    SAM --> Semantic --> Traversal --> Workflow --> Provenance
+
+    %% Connect TIAA ↔ SAM
+    Trigger --> Semantic
+    Issue --> Semantic
+    ActionNode --> Workflow
+    ActorNode --> Provenance
+
+    %% ===========================
+    %% BOTTOM LEVEL — STRIDE System Layer
+    %% ===========================
+    STRIDE["STRIDE Framework
+    (Graph-Native Execution System)"]:::stride
+
+    ETL["Python ETL & Data Validation"]:::stride
+    Reasoning["Neo4j Reasoning Engine"]:::stride
+    WorkflowExec["Workflow Engine (Power Automate / n8n)"]:::stride
+    Logging["Provenance Storage"]:::stride
+
+    STRIDE --> ETL --> Reasoning --> WorkflowExec --> Logging
+
+    %% SAM ↔ STRIDE Mapping
+    Semantic --> Reasoning
+    Traversal --> Reasoning
+    Workflow --> WorkflowExec
+    Provenance --> Logging
+
+    %% ===========================
+    %% GRAPH SCHEMA LAYER
+    %% ===========================
+    subgraph GraphSchema["Property Graph Schema (Ontology)"]
+        BC["BuildingComponent"]:::graph
+        Sensor["Sensor"]:::graph
+        PD["PerformanceData"]:::graph
+        Anomaly["Anomaly"]:::graph
+        Task["MaintenanceTask"]:::graph
+        Actor["Actor"]:::graph
+
+        Sensor -->|"MONITORS"| BC
+        Sensor -->|"GENERATES"| PD
+        PD -->|"GENERATES"| Anomaly
+        Anomaly -->|"TRIGGERS"| Task
+        Task -->|"ASSIGNED_TO"| Actor
+    end
+
+    Reasoning --> GraphSchema
+```
 
 ---
 
