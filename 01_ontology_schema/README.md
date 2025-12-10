@@ -34,6 +34,14 @@
 flowchart TD
 
     %% ===========================
+    %% Color Definitions
+    %% ===========================
+    classDef tiaa fill:#EDE7F6,stroke:#5E35B1,stroke-width:1px,color:#000;
+    classDef sam fill:#E3F2FD,stroke:#1565C0,stroke-width:1px,color:#000;
+    classDef stride fill:#E8F5E9,stroke:#2E7D32,stroke-width:1px,color:#000;
+    classDef graph fill:#FFFDE7,stroke:#F9A825,stroke-width:1px,color:#000;
+
+    %% ===========================
     %% TIAA Layer
     %% ===========================
     TIAA["TIAA Semantic Cells"]
@@ -46,6 +54,9 @@ flowchart TD
     TIAA --> Issue
     TIAA --> ActionNode
     TIAA --> ActorNode
+
+    class TIAA,Trigger,Issue,ActionNode,ActorNode tiaa
+
 
     %% ===========================
     %% SAM Layer
@@ -63,6 +74,9 @@ flowchart TD
     ActionNode --> Workflow
     ActorNode --> Provenance
 
+    class SAM,Semantic,Traversal,Workflow,Provenance sam
+
+
     %% ===========================
     %% STRIDE Layer
     %% ===========================
@@ -78,6 +92,9 @@ flowchart TD
     Traversal --> Reasoning
     Workflow --> WorkflowExec
     Provenance --> Logging
+
+    class STRIDE,ETL,Reasoning,WorkflowExec,Logging stride
+
 
     %% ===========================
     %% GRAPH SCHEMA LAYER
@@ -96,6 +113,8 @@ flowchart TD
         Anomaly -->|"TRIGGERS"| Task
         Task -->|"ASSIGNED_TO"| ActorEnt
     end
+
+    class GraphSchema,BC,Sensor,PD,Anomaly,Task,ActorEnt graph
 
     Reasoning --> GraphSchema
 
