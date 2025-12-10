@@ -1,4 +1,19 @@
 # public-phd-sam : 語義行動管理（SAM）框架實證數據庫
+Semantic Action Management (SAM) Reproducibility Package
+MIT Licensed
+
+本資料庫為博士論文《語義行動管理（SAM）框架之運維自動化研究》與期刊論文
+STRIDE: Semantic Reasoning and Integration for Data-driven Engineering
+所使用之完整可重現（reproducible）數據與程式套件（Replication Package）。
+
+本專案涵蓋：
+-語義模型（Ontology / TTL / Cypher / SHACL）
+-資料集（PdM / Carbon / Dynamic Ontology）
+-推理與自動化腳本（Neo4j + Python）
+-工作流藍圖（Power Automate / n8n）
+-性能、可追溯性、TTA（Event→Action Latency）量化驗證工具
+-重現本論文所有統計結果之 notebook 與輸出檔案
+本項目以 MIT License 授權，可自由使用、延伸、引用。
 
 ---
 
