@@ -28,7 +28,9 @@
 
 以下為 SAM／STRIDE ontology 在三層語意結構（TIAA → SAM → STRIDE）中的定位，並展示核心 Graph Schema（BuildingComponent, Sensor, PerformanceData, Anomaly, Task, Actor）。
 
+> 圖中以**紫色表示 TIAA（語意行動單元）**、**藍色表示 SAM（語意推理與行動管理）**、**綠色表示 STRIDE（系統執行層）**、**黃色表示 Property Graph Schema（底層資料結構）**，用以強調本研究的跨層語意框架。
 > 此圖將同時用於 Appendix A.1 與研究簡報。
+
 
 ```mermaid
 flowchart TD
