@@ -39,7 +39,7 @@ flowchart TD
     classDef tiaa fill:#EDE7F6,stroke:#5E35B1,stroke-width:1px,color:#000;
     classDef sam fill:#E3F2FD,stroke:#1565C0,stroke-width:1px,color:#000;
     classDef stride fill:#E8F5E9,stroke:#2E7D32,stroke-width:1px,color:#000;
-    classDef graph fill:#FFFDE7,stroke:#F9A825,stroke-width:1px,color:#000;
+    classDef pgschema fill:#FFFDE7,stroke:#F9A825,stroke-width:1px,color:#000;
 
     %% ===========================
     %% TIAA Layer
@@ -111,12 +111,6 @@ flowchart TD
         Sensor -->|"GENERATES"| PD
         PD -->|"GENERATES"| Anomaly
         Anomaly -->|"TRIGGERS"| Task
-        Task -->|"ASSIGNED_TO"| ActorEnt
-    end
-
-    class GraphSchema,BC,Sensor,PD,Anomaly,Task,ActorEnt graph
-
-    Reasoning --> GraphSchema
 
 ```
 
