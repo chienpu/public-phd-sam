@@ -107,6 +107,10 @@ graph TD
     ANO --> TASK
     TASK --> ACTOR
 
+    %% Missing but required FOI link:
+    BC --> PD
+
+
 ```
 
 此圖可視為本研究跨標準語意整合（Interoperability Layer）的核心結構，
