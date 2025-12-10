@@ -82,18 +82,18 @@ Mermaid 圖示展示了資料如何從感測（Sensor）到觀測（PerformanceD
 graph TD
 
     %% Upper ontology classes
-    IFC[IFC:IfcElement]
-    SOSA_Sensor[SOSA:Sensor]
-    SOSA_Obs[SOSA:Observation]
-    PROV_Ent[PROV:Entity]
+    IFC[IFC IfcElement]
+    SOSA_Sensor[SOSA Sensor]
+    SOSA_Obs[SOSA Observation]
+    PROV_Ent[PROV Entity]
 
     %% STRIDE / SAM classes
-    BC[sam:BuildingComponent]
-    SEN[sam:Sensor]
-    PD[sam:PerformanceData]
-    ANO[sam:Anomaly]
-    TASK[sam:MaintenanceTask<br/>(prov:Activity)]
-    ACTOR[sam:Actor<br/>(prov:Agent)]
+    BC[sam BuildingComponent]
+    SEN[sam Sensor]
+    PD[sam PerformanceData]
+    ANO[sam Anomaly]
+    TASK[sam MaintenanceTask - prov Activity]
+    ACTOR[sam Actor - prov Agent]
 
     %% Ontology alignments
     IFC --> BC
@@ -106,6 +106,7 @@ graph TD
     PD --> ANO
     ANO --> TASK
     TASK --> ACTOR
+
 ```
 
 此圖可視為本研究跨標準語意整合（Interoperability Layer）的核心結構，
