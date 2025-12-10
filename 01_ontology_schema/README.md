@@ -32,24 +32,15 @@
 
 ```mermaid
 flowchart TD
-    %% ===========================
-    %% STYLE
-    %% ===========================
-    classDef tiaa fill:#E3F2FD,stroke:#1565C0,stroke-width:1.2px,color:#0D47A1;
-    classDef sam fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.2px,color:#1B5E20;
-    classDef stride fill:#FFF3E0,stroke:#EF6C00,stroke-width:1.2px,color:#E65100;
-    classDef graphnode fill:#F3E5F5,stroke:#6A1B9A,stroke-width:1.2px,color:#4A148C;
 
     %% ===========================
-    %% TOP LEVEL — TIAA
+    %% TIAA Layer
     %% ===========================
-    TIAA["TIAA Semantic Cells
-    (Trigger – Issue – Action – Actor)"]:::tiaa
-
-    Trigger["Trigger"]:::tiaa
-    Issue["Issue"]:::tiaa
-    ActionNode["Action"]:::tiaa
-    ActorNode["Actor"]:::tiaa
+    TIAA["TIAA Semantic Cells"]
+    Trigger["Trigger"]
+    Issue["Issue"]
+    ActionNode["Action"]
+    ActorNode["Actor"]
 
     TIAA --> Trigger
     TIAA --> Issue
@@ -57,38 +48,32 @@ flowchart TD
     TIAA --> ActorNode
 
     %% ===========================
-    %% MIDDLE LEVEL — SAM Closed Loop
+    %% SAM Layer
     %% ===========================
-    SAM["Semantic Action Management (SAM)
-    Semantic → Traversal → Workflow → Provenance"]:::sam
-
-    Semantic["Semantic Interpretation"]:::sam
-    Traversal["Graph Traversal Reasoning"]:::sam
-    Workflow["Workflow Invocation"]:::sam
-    Provenance["Provenance Recording"]:::sam
+    SAM["Semantic Action Management (SAM)"]
+    Semantic["Semantic Interpretation"]
+    Traversal["Graph Traversal Reasoning"]
+    Workflow["Workflow Invocation"]
+    Provenance["Provenance Tracking"]
 
     SAM --> Semantic --> Traversal --> Workflow --> Provenance
 
-    %% Connect TIAA ↔ SAM
     Trigger --> Semantic
     Issue --> Semantic
     ActionNode --> Workflow
     ActorNode --> Provenance
 
     %% ===========================
-    %% BOTTOM LEVEL — STRIDE System Layer
+    %% STRIDE Layer
     %% ===========================
-    STRIDE["STRIDE Framework
-    (Graph-Native Execution System)"]:::stride
-
-    ETL["Python ETL & Data Validation"]:::stride
-    Reasoning["Neo4j Reasoning Engine"]:::stride
-    WorkflowExec["Workflow Engine (Power Automate / n8n)"]:::stride
-    Logging["Provenance Storage"]:::stride
+    STRIDE["STRIDE Framework"]
+    ETL["Python ETL"]
+    Reasoning["Neo4j Reasoning Engine"]
+    WorkflowExec["Workflow Engine"]
+    Logging["Provenance Storage"]
 
     STRIDE --> ETL --> Reasoning --> WorkflowExec --> Logging
 
-    %% SAM ↔ STRIDE Mapping
     Semantic --> Reasoning
     Traversal --> Reasoning
     Workflow --> WorkflowExec
@@ -97,22 +82,23 @@ flowchart TD
     %% ===========================
     %% GRAPH SCHEMA LAYER
     %% ===========================
-    subgraph GraphSchema["Property Graph Schema (Ontology)"]
-        BC["BuildingComponent"]:::graph
-        Sensor["Sensor"]:::graph
-        PD["PerformanceData"]:::graph
-        Anomaly["Anomaly"]:::graph
-        Task["MaintenanceTask"]:::graph
-        Actor["Actor"]:::graph
+    subgraph GraphSchema["Property Graph Schema"]
+        BC["BuildingComponent"]
+        Sensor["Sensor"]
+        PD["PerformanceData"]
+        Anomaly["Anomaly"]
+        Task["MaintenanceTask"]
+        ActorEnt["Actor"]
 
         Sensor -->|"MONITORS"| BC
         Sensor -->|"GENERATES"| PD
         PD -->|"GENERATES"| Anomaly
         Anomaly -->|"TRIGGERS"| Task
-        Task -->|"ASSIGNED_TO"| Actor
+        Task -->|"ASSIGNED_TO"| ActorEnt
     end
 
     Reasoning --> GraphSchema
+
 ```
 
 ---
