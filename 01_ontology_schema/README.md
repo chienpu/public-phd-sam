@@ -107,10 +107,17 @@ flowchart TD
         Task["MaintenanceTask"]
         ActorEnt["Actor"]
 
-        Sensor -->|"MONITORS"| BC
-        Sensor -->|"GENERATES"| PD
-        PD -->|"GENERATES"| Anomaly
-        Anomaly -->|"TRIGGERS"| Task
+        Sensor -- MONITORS --> BC
+        Sensor -- GENERATES --> PD
+        PD -- GENERATES --> Anomaly
+        Anomaly -- TRIGGERS --> Task
+        Task -- ASSIGNED_TO --> ActorEnt
+    end
+
+    class GraphSchema,BC,Sensor,PD,Anomaly,Task,ActorEnt pgschema
+
+    Reasoning --> GraphSchema
+
 
 ```
 
