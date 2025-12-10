@@ -150,3 +150,107 @@ STRIDE ontology 依循五項設計原則：
 ```cyper
 (s:Sensor)-[:MONITORS]->(c:BuildingComponent)
 ```
+
+
+---
+
+## 4.2 GENERATES
+**Sensor → PerformanceData**  
+**PerformanceData → Anomaly**
+
+意義：
+
+1. Sensor 生成一筆量測資料（PerformanceData）  
+2. 量測資料觸發 anomaly  
+
+---
+
+## 4.3 TRIGGERS  
+**Anomaly → MaintenanceTask**
+
+意義：異常生成維修工單。
+
+---
+
+## 4.4 ASSIGNED_TO  
+**MaintenanceTask → Actor**
+
+意義：工單指派給維運人員／系統。
+
+---
+
+## 4.5 HAS_PROVENANCE  
+**Any → Provenance Node (Activity/Entity/Agent)**
+
+用於追蹤責任鏈與事件來源。
+
+---
+
+# 5. Graph Invariants（Model Constraints）
+
+以下是 ontology 必須遵守的結構規則：
+
+### ✔ 每個 `PerformanceData` 必須且只能由一個 Sensor 生成  
+### ✔ 每個 `Anomaly` 必須至少關聯一個 PerformanceData  
+### ✔ 每個 `MaintenanceTask` 必須由一個 Anomaly 觸發  
+### ✔ `Actor` 可以是人或系統（domain-agnostic）  
+
+---
+
+# 6. IFC / SOSA / PROV-O Mappings
+
+詳見 `ttl/README_ontology_mapping.md`。  
+快速摘要如下：
+
+| STRIDE Entity | Standard | 說明 |
+|---------------|----------|------|
+| BuildingComponent | IFC IfcElement | 建築元件 |
+| Sensor | SOSA:Sensor | 感測器 |
+| PerformanceData | SOSA:Observation | 觀測值 |
+| Anomaly | PROV:Entity | 事件資料 |
+| MaintenanceTask | PROV:Activity | 需執行的行動 |
+| Actor | PROV:Agent | 執行行動的代理人 |
+
+---
+
+# 7. Example Graph Shape
+
+```cyper
+(Sensor)-[:GENERATES]->(PerformanceData)-[:GENERATES]->(Anomaly)-[:TRIGGERS]->(MaintenanceTask)-[:ASSIGNED_TO]->(Actor)
+```
+
+此鏈用於：
+
+- traceability  
+- TTA（event → action 延遲）  
+- PdM 驗證  
+
+---
+
+# 8. Minimal Working Example (MWE)
+
+```cyper
+CREATE (c:BuildingComponent {ComponentId:"C1", type:"AHU"})
+CREATE (s:Sensor {SensorId:"S1", type:"Temperature"})
+CREATE (s)-[:MONITORS]->(c)
+CREATE (d:PerformanceData {timestamp:datetime(), value:32})
+CREATE (s)-[:GENERATES]->(d)
+```
+
+---
+
+# 9. Versioning
+
+本 schema 將隨 STRIDE 推理模組更新。  
+建議使用 git tag 管理版本（ex: `schema-v1.0`）。
+
+---
+
+# 10. Citation
+
+若使用此 schema，請引用：
+
+Huang & Hsieh (2026).  
+“Semantic Reasoning and Integration for Automating Predictive Maintenance in Smart Facility Management.”
+
+---
