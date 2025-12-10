@@ -1,4 +1,3 @@
-
 # 01_ontology_schema
 
 本資料夾包含 SAM/STRIDE 框架之 **語義結構定義與圖模式（schema）**：
@@ -6,6 +5,20 @@
 - Core ontology（以 Neo4j property graph 為主）
 - 與 SOSA / IFC / PROV 等語意標準之對應（TTL）
 - 建立 Neo4j schema 與基礎推理查詢之 Cypher 腳本
+
+## 📖 對應論文章節與附錄
+
+本資料夾主要支援以下論文章節與附錄內容：
+- **第 4 章：語意行動管理（SAM）方法論：理論基礎與形式化模型**  
+  - 尤其是 **4.1 語意行動管理概念模型**、**4.2 圖原生定義**，以及 TIAA／SAM 結構在圖中的表示方式。
+- **第 5 章：STRIDE 框架與系統實作**  
+  - 作為 STRIDE 各層實作的語意上下文（Ontology Schema）。
+- **第 6 章：評估與案例**  
+  - PdM 與 SID–CM 案例的圖結構與多跳推理均依賴此 schema 作為基礎。
+
+換句話說，`01_ontology_schema/` 提供的是上述章節中所有「圖原生語意結構」的實際技術實作對應。
+
+---
 
 ## 結構
 
