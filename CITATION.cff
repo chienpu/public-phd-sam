@@ -1,2 +1,63 @@
+
 cff-version: 1.2.0
-authors: []
+message: "If you use this repository, please cite the following thesis and related papers."
+title: "public-phd-sam: Graph-Native Semantic Action Management Reproducibility Package"
+authors:
+  - family-names: "Huang"
+    given-names: "Chien-Pu"
+license: "MIT"
+version: "1.0.0"
+date-released: "2025-12-10"
+references:
+  - type: thesis
+    title: "Graph-Native Semantic Action Management for Operations and Maintenance Automation in Smart Built Environments"
+    authors:
+      - family-names: "Huang"
+        given-names: "Chien-Pu"
+    year: 2025
+    thesis-type: "PhD thesis"
+    institution: "National Taiwan University"
+  - type: article
+    title: "Semantic Digital Thread Framework for Explainable Lifecycle Carbon Management: An Ontology-Driven and Auditable Automation Backbone"
+    authors:
+      - family-names: "Huang"
+        given-names: "Chien-Pu"
+      - family-names: "Hsieh"
+        given-names: "Shang-Hsien"
+    year: 2026
+    journal: "Automation in Construction"
+    notes: "Source code and data: https://github.com/chienpu/public-carbon-aware-digital-twin"
+  - type: article
+    title: "Semantic Reasoning and Integration for Automating Predictive Maintenance in Smart Facility Management"
+    authors:
+      - family-names: "Huang"
+        given-names: "Chien-Pu"
+      - family-names: "Hsieh"
+        given-names: "Shang-Hsien"
+    year: 2026
+    journal: "Advanced Engineering Informatics"
+  - type: conference-paper
+    title: "Ontology-Driven Automation for BIM-FM Data Integration Using Neo4j, Python, and Workflow Platforms"
+    authors:
+      - family-names: "Huang"
+        given-names: "Chien-Pu"
+      - family-names: "Hsieh"
+        given-names: "Shang-Hsien"
+    year: 2025
+    collection-title: "ASCE International Conference on Computing in Civil Engineering (i3CE 2025)"
+    conference:
+      name: "i3CE 2025"
+      location: "New Orleans, LA, United States"
+  - type: conference-paper
+    title: "Neo4j-Powered Workflow for Lifecycle Carbon Management: The NTU Campus Case Study"
+    authors:
+      - family-names: "Huang"
+        given-names: "Chien-Pu"
+      - family-names: "Hsieh"
+        given-names: "Shang-Hsien"
+    year: 2025
+    collection-title: "CIB World Building Congress (WBC 2025)"
+    conference:
+      name: "WBC 2025"
+      location: "West Lafayette, IN, United States"
+    doi: "10.7771/3067-4883.2108"
