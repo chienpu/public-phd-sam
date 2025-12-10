@@ -1,0 +1,117 @@
+@prefix ifc:   <https://standards.buildingsmart.org/IFC/DEV/> .
+@prefix bot:   <https://w3id.org/bot#> .
+@prefix sosa:  <http://www.w3.org/ns/sosa/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix sam:   <http://semantic.building/sam#> .
+@prefix stride:<http://semantic.building/stride#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+
+###################################################################
+# InterOpBIM–FM Alignment Ontology
+# Author: Chien-Pu Huang
+# Purpose: Provide semantic mapping between IFC entities and
+#          STRIDE/SAM classes used in PdM & FM automation.
+###################################################################
+
+sam:BuildingComponent a rdfs:Class ;
+    rdfs:label "Building Component" ;
+    rdfs:comment "A maintainable physical element monitored by sensors." ;
+    rdfs:subClassOf ifc:IfcElement .
+
+sam:Space a rdfs:Class ;
+    rdfs:label "Space" ;
+    rdfs:subClassOf ifc:IfcSpace .
+
+sam:Zone a rdfs:Class ;
+    rdfs:label "Zone" ;
+    rdfs:subClassOf ifc:IfcZone .
+
+###################################################################
+# SENSOR → IFC → SAM Mapping
+###################################################################
+
+sam:Sensor a rdfs:Class ;
+    rdfs:label "Sensor" ;
+    rdfs:comment "Physical or logical sensing device observing building components." ;
+    rdfs:subClassOf sosa:Sensor .
+
+sam:BuildingComponent sosa:isFeatureOfInterestOf sam:Sensor .
+
+###################################################################
+# OBSERVATION Mapping
+###################################################################
+
+sam:PerformanceData a rdfs:Class ;
+    rdfs:label "Performance Data" ;
+    rdfs:comment "Observation data produced by a sensor." ;
+    rdfs:subClassOf sosa:Observation .
+
+sosa:Observation sosa:hasFeatureOfInterest sam:BuildingComponent .
+
+###################################################################
+# PdM EVENT Mapping (Anomaly)
+###################################################################
+
+sam:Anomaly a rdfs:Class ;
+    rdfs:label "Anomaly" ;
+    rdfs:comment "Event representing deviation from normal behavior detected from observations." ;
+    rdfs:subClassOf prov:Entity .
+
+###################################################################
+# MAINTENANCE ACTION Mapping
+###################################################################
+
+sam:MaintenanceTask a rdfs:Class ;
+    rdfs:label "Maintenance Task" ;
+    rdfs:comment "Task triggered in response to an anomaly." ;
+    rdfs:subClassOf prov:Activity .
+
+sam:triggers a owl:ObjectProperty ;
+    rdfs:domain sam:Anomaly ;
+    rdfs:range sam:MaintenanceTask ;
+    rdfs:label "Triggers" .
+
+###################################################################
+# ACTOR Mapping
+###################################################################
+
+sam:Actor a rdfs:Class ;
+    rdfs:label "Actor" ;
+    rdfs:comment "Human or system responsible for executing maintenance tasks." ;
+    rdfs:subClassOf prov:Agent .
+
+sam:assignedTo a owl:ObjectProperty ;
+    rdfs:domain sam:MaintenanceTask ;
+    rdfs:range sam:Actor ;
+    rdfs:label "Assigned To" .
+
+###################################################################
+# WORKFLOW / PROVENANCE Mapping
+###################################################################
+
+stride:WorkflowRun a rdfs:Class ;
+    rdfs:label "Workflow Run" ;
+    rdfs:comment "Execution record of a STRIDE-triggered workflow." ;
+    rdfs:subClassOf prov:Activity .
+
+stride:hasProvenance a owl:ObjectProperty ;
+    rdfs:domain prov:Entity ;
+    rdfs:range prov:Activity ;
+    rdfs:label "Has Provenance" .
+
+###################################################################
+# MISCELLANEOUS
+###################################################################
+
+sam:partOf a owl:ObjectProperty ;
+    rdfs:domain sam:BuildingComponent ;
+    rdfs:range ifc:IfcElement ;
+    rdfs:label "Part Of (IFC Decomposition)" .
+
+###################################################################
+# Notes
+# - InterOpBIM-FM serves as the semantic alignment layer.
+# - STRIDE runtime uses Neo4j Property Graph; TTL is for documentation.
+# - This TTL can be extended for RDF-star hybrid graphs.
+###################################################################
