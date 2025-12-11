@@ -50,8 +50,9 @@
 │   └─ README_Carbon_overview.md
 │
 └─ README.md   ← 本檔案
-
 ```
+
+---
 
 ## 1. PdM / HVAC Case Datasets
 ### 1.1 raw/ — 感測與設備資料
@@ -112,8 +113,6 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 (:Sensor)-[:GENERATES]->(:PerformanceData {event_id})-[:ABOUT]->(:BuildingComponent {GlobalId})`
 ```
 
----
-
 #### 1.2.2 Anomaly_Data_300.csv
 基於 PerformanceData 之推理或 AI 模型輸出的異常標註。
 
@@ -152,8 +151,6 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 ```cypher
 (:Sensor {sensor_id:Source})-[:MONITORS]->(:BuildingComponent {GlobalId:Target})
 ```
-
----
 
 #### 1.3.2 Edge_GENERATES.csv
 描述感測器產生 PerformanceData 之關係。
@@ -208,7 +205,6 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 | Sup01    | Supervisor_01 | Supervisor | FM_Office  |
 | AIA01    | AI_Agent_01   | AI-Agent   | AI_Service |
 
-
 ---
 
 ## 2. Carbon_SIDCM — Demo Data for Semantic Digital Thread (SID-CM)
@@ -231,8 +227,6 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 | `factor_kgco2e_per_unit` | 單位碳排（kgCO₂e / unit） |
 | `source`                 | 資料來源（如 `ICE_demo`）  |
 
----
-
 #### 2.1.2 Carbon_Component_BoQ_demo.csv
 | 欄位名稱            | 說明                                       |
 | --------------- | ---------------------------------------- |
@@ -241,8 +235,6 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 | `quantity`      | 數量                                       |
 | `unit`          | 單位                                       |
 | `stage`         | 生命週期階段（如 A1–A3, A4, A5）                  |
-
----
 
 #### 2.1.3 Carbon_Energy_Use_demo.csv
 
@@ -255,3 +247,40 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 | `scope`       | 範疇（如 `Operational`, `Embodied`） |
 
 
+---
+
+## 3. PdM Data Flow 與 Graph Schema（Mermaid）
+
+以下 Mermaid 圖說明 PdM 資料如何從 raw CSV 經由 ETL 進入 Neo4j 的 Property Graph Schema，
+並對應到語意行動管理流程。
+
+```mermaid
+flowchart LR
+    subgraph RawData[Raw CSV Data]
+        SD[Sensor_Data_300.csv]
+        BC[BuildingComponent_Dataset.csv]
+        PD[Performance_Data_300.csv]
+        AD[Anomaly_Data_300.csv]
+        EM[Edge_MAPS_SENSOR_DATA.csv]
+        EG[Edge_GENERATES.csv]
+    end
+
+    subgraph Graph[Neo4j Property Graph Schema]
+        SNode[Sensor]
+        BCNode[BuildingComponent]
+        PDNode[PerformanceData]
+        ANode[Anomaly]
+        TNode[MaintenanceTask]
+        ActorNode[Actor]
+    end
+
+    SD -->|ETL (03_execution)| PDNode
+    BC -->|ETL| BCNode
+    PD -->|ETL| PDNode
+    AD -->|ETL| ANode
+    EM -->|MONITORS| SNode -.-> BCNode
+    EG -->|GENERATES| SNode -.-> PDNode
+
+    ANode -->|TRIGGERS| TNode
+    TNode -->|ASSIGNED_TO| ActorNode
+```
