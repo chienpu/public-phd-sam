@@ -1,0 +1,69 @@
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sam:  <http://semantic.building/sam#> .
+
+################################################################################
+# SOSA Minimal Subset for STRIDE / SAM
+# Author: Chien-Pu Huang
+# Purpose:
+#   Provide the minimal SOSA classes and properties used in the ontology.
+#   This file documents semantic alignment; STRIDE runtime uses Neo4j PG.
+################################################################################
+
+###########################
+# Core SOSA Classes
+###########################
+
+sosa:Sensor a rdfs:Class ;
+    rdfs:label "SOSA Sensor" ;
+    rdfs:comment "An entity capable of sensing or observing properties." .
+
+sosa:Observation a rdfs:Class ;
+    rdfs:label "SOSA Observation" ;
+    rdfs:comment "Act performed by a Sensor producing a result." .
+
+sosa:FeatureOfInterest a rdfs:Class ;
+    rdfs:label "Feature of Interest" ;
+    rdfs:comment "Entity that observations are about." .
+
+
+###########################
+# Core SOSA Properties
+###########################
+
+sosa:observes a rdfs:Property ;
+    rdfs:label "observes" ;
+    rdfs:domain sosa:Sensor ;
+    rdfs:range  rdfs:Resource ;
+    rdfs:comment "Describes the property being observed." .
+
+sosa:hasFeatureOfInterest a rdfs:Property ;
+    rdfs:label "has Feature of Interest" ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range  sosa:FeatureOfInterest ;
+    rdfs:comment "Links an Observation to what it is observing." .
+
+sosa:hasResult a rdfs:Property ;
+    rdfs:label "has Result" ;
+    rdfs:domain sosa:Observation ;
+    rdfs:comment "Links an Observation to its result." .
+
+sosa:resultTime a rdfs:Property ;
+    rdfs:label "result time" ;
+    rdfs:domain sosa:Observation ;
+    rdfs:comment "The time at which the result became available." .
+
+
+###########################
+# SAM Alignment Notes
+###########################
+
+# In SAM / STRIDE:
+# - sam:Sensor      → subclass of sosa:Sensor
+# - sam:PerformanceData → subclass of sosa:Observation
+# - sam:BuildingComponent → maps to sosa:FeatureOfInterest
+# These mappings are documented in interopbim-fm.ttl.
+
+################################################################################
+# End of File
+################################################################################
