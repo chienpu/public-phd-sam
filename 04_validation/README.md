@@ -93,3 +93,49 @@
 單位時間內系統可處理的事件數（events/sec）：
 
 <img src="../04_validation/formulas/Throughput_formula.png" width="220"/>
+
+### 2.4 遺失率（Event Loss Rate）
+事件流中遺失事件比例：
+
+<img src="../04_validation/formulas/Loss_formula.png" width="220"/>
+
+### 2.5 可移植性（Portability Score）
+衡量 STRIDE 在不同場域（PdM、SID-CM）之間重部署的容易度：
+
+<img src="../04_validation/formulas/Portability_formula.png" width="220"/>
+
+### 2.6 補償命中率（Compensation Hit Rate）
+異常或流程失敗時，系統是否成功啟動補償流程：
+
+<img src="../04_validation/formulas/Compensation_formula.png" width="220"/>
+
+## 🧪 3. 如何重現論文中的所有指標
+### 步驟一：執行 ETL 與推理（03_execution）
+
+使用以下腳本會：
+ - 載入 PdM 與 SID-CM 圖資料
+ - 執行 anomaly → task → provenance
+ - 將工作流事件與 API 觸發記錄於 workflow_logs/
+
+```bash
+python 03_execution/run_all.py
+```
+
+步驟二：執行 compute_metrics.py（自動計算所有指標）
+
+此工具會：
+ - 計算 TTA（由 IoT event 與 workflow start 時間）
+ - 產生 latency 統計
+ - 計算 compensation hit rate
+ - 對 traceability 進行 completeness 檢查
+ - 依據公式產出所有結果 CSV
+
+```bash
+python 04_validation/metrics/compute_metrics.py
+```
+
+輸出於：
+ - `RESULTS/tta_log.csv`
+ - `RESULTS/latency_results.csv`
+ - `RESULTS/compensation_rate.csv`
+ - `RESULTS/summary_statistics.md`
