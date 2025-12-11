@@ -305,7 +305,7 @@ flowchart LR
     %% ============================
     %% Graph Schema Layer
     %% ============================
-    subgraph PG["Property Graph Schema"]
+    subgraph PG["Schema Layer"]
         Sensor["Sensor"]
         BC["BuildingComponent"]
         PD["PerformanceData"]
@@ -325,16 +325,17 @@ flowchart LR
 
 
     %% ============================
-    %% CLASS DEFINITIONS (GitHub-safe)
+    %% CLASS DEFINITIONS
     %% ============================
     classDef tiaa fill:#F3E5F5;
     classDef sam fill:#E3F2FD;
     classDef stride fill:#E8F5E9;
-    classDef graph fill:#FFF8E1;
+    classDef schema fill:#FFF8E1;
 
     class TIAA,Trigger,Issue,ActionNode,ActorNode tiaa;
     class SAM,Semantic,Traversal,Workflow,Provenance sam;
     class STRIDE,ETL,Reasoning,WEngine,PStore stride;
-    class Sensor,BC,PD,Anomaly,Task,Act graph;
+    class Sensor,BC,PD,Anomaly,Task,Act schema;
+
 
 ```
