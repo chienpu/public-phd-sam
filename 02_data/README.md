@@ -255,49 +255,56 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 並對應到語意行動管理流程。
 
 ```mermaid
-flowchart TD
-    TIAA["TIAA Semantic Cells"]
-    Trigger["Trigger"]
-    Issue["Issue"]
-    ActionNode["Action"]
-    ActorNode["Actor"]
-    TIAA --> Trigger --> Semantic
-    TIAA --> Issue --> Semantic
-    TIAA --> ActionNode --> Workflow
-    TIAA --> ActorNode --> Provenance
+flowchart LR
 
-    SAM["Semantic Action Management"]
-    Semantic["Semantic Interpretation"]
-    Traversal["Graph Traversal Reasoning"]
-    Workflow["Workflow Invocation"]
-    Provenance["Provenance Tracking"]
-    SAM --> Semantic --> Traversal --> Workflow --> Provenance
-
-    STRIDE["STRIDE Framework"]
-    ETL["Python ETL"]
-    Reasoning["Neo4j Reasoning Engine"]
-    WorkflowExec["Workflow Engine"]
-    Logging["Provenance Storage"]
-    STRIDE --> ETL --> Reasoning --> WorkflowExec --> Logging
-    Semantic --> Reasoning
-    Traversal --> Reasoning
-    Workflow --> WorkflowExec
-    Provenance --> Logging
-
-    subgraph GraphSchema["Property Graph Schema"]
-        BC["BuildingComponent"]
-        Sensor["Sensor"]
-        PD["PerformanceData"]
-        Anomaly["Anomaly"]
-        Task["MaintenanceTask"]
-        ActorEnt["Actor"]
-        Sensor -- MONITORS --> BC
-        Sensor -- GENERATES --> PD
-        BC -- ABOUT --> PD
-        PD -- GENERATES --> Anomaly
-        Anomaly -- TRIGGERS --> Task
-        Task -- ASSIGNED_TO --> ActorEnt
+    %% ============================
+    %% Raw CSV Data
+    %% ============================
+    subgraph Raw["Raw CSV Data"]
+        BCcsv["BuildingComponent_Dataset.csv"]
+        SDcsv["Sensor_Data_300.csv"]
+        PDcsv["Performance_Data_300.csv"]
+        ADcsv["Anomaly_Data_300.csv"]
+        EMcsv["Edge_MAPS_SENSOR_DATA.csv"]
+        EGcsv["Edge_GENERATES.csv"]
     end
-    Reasoning --> GraphSchema
+
+    %% ============================
+    %% Neo4j Graph Schema
+    %% ============================
+    subgraph Graph["Neo4j Property Graph Schema"]
+        Sensor["Sensor"]
+        BC["BuildingComponent"]
+        PDnode["PerformanceData"]
+        Anode["Anomaly"]
+        Task["MaintenanceTask"]
+        Actor["Actor"]
+    end
+
+    %% ============================
+    %% ETL Imports (Dashed Line)
+    %% ============================
+    BCcsv -.->|ETL_Import| BC
+    SDcsv -.->|ETL_Import| Sensor
+    PDcsv -.->|ETL_Import| PDnode
+    ADcsv -.->|ETL_Import| Anode
+
+    %% ============================
+    %% Edge Mapping from CSV
+    %% ============================
+    EMcsv -->|MONITORS| Sensor
+    Sensor --> BC
+
+    EGcsv -->|GENERATES| Sensor
+    Sensor --> PDnode
+
+    %% ============================
+    %% Semantic Schema Relations
+    %% ============================
+    PDnode -->|ABOUT| BC
+    PDnode -->|GENERATES| Anode
+    Anode -->|TRIGGERS| Task
+    Task -->|ASSIGNED_TO| Actor
+
 
 ```
