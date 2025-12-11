@@ -149,3 +149,12 @@ python 04_validation/metrics/compute_metrics.py
  - `RESULTS/traceability_report.md`
  - `traceability/examples/*.png`（可直接插入論文第六章）
 
+### 步驟四：效能與 Scalability 測試
+使用以下查詢：
+```bash
+:load 04_validation/performance/query_performance.cypher
+```
+
+可得到：
+ - 多跳查詢時間（對應論文 Fig 5-12）
+ - 圖規模 vs 查詢成本（對應 Scalability 討論段落）
