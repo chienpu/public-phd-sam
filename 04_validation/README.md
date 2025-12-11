@@ -78,8 +78,12 @@
 | **Loss Rate（遺失率）**  | 事件於 IoT → Neo4j → Workflow 中的丟失比率 |
 
 ## 🧮 2. 指標定義（含圖片）
-### 1. 事件至行動延遲（TTA）
-事件觸發到行動開始的時間差： 
+### 2.1 事件至行動延遲（TTA, Time-to-Action）
+事件觸發到行動開始的時間差：
 
-<img src="./formulas/TTA_formula.png" width="250"/>
+<img src="../04_validation/formulas/TTA_formula.png" width="220"/>
+
+來源：CEP / EDA 反應時間衡量方法（Chandy 2016；Teymourian 2009）
+
+
 
