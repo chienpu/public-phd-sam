@@ -261,10 +261,10 @@ flowchart LR
 %% Style Definitions
 %% ============================
 
-classDef raw fill=#ECEFF1,stroke=#90A4AE,color=#000,stroke-width=1px;
-classDef graph fill=#FFF8E1,stroke=#BCAAA4,color=#000,stroke-width=1px;
+classDef raw fill:#ECEFF1,stroke:#90A4AE,color:#000,stroke-width:1px;
+classDef graph fill:#FFF8E1,stroke:#BCAAA4,color:#000,stroke-width:1px;
 
-linkStyle default stroke=#BDBDBD,stroke-dasharray=4 4;
+linkStyle default stroke:#BDBDBD,stroke-dasharray: 4 4;
 
 %% ============================
 %% Raw CSV Data
@@ -317,5 +317,6 @@ PDnode -->|ABOUT| BC
 PDnode -->|GENERATES| Anode
 Anode -->|TRIGGERS| Task
 Task -->|ASSIGNED_TO| Actor
+
 ```
 
