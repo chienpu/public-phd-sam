@@ -101,7 +101,7 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 
 ### 1.2 processed/ — 數據整理與異常標註
 #### 1.2.1 Performance_Data_300.csv
-由 raw 觀測加上設備對映與時間切片後產生的性能資料。
+將 raw 感測資料整合進行對齊（含 BuildingComponent 連結）。
 
 | 欄位名稱           | 型別     | 說明                                             |
 | -------------- | ------ | ---------------------------------------------- |
@@ -115,9 +115,9 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 | `date`         | string | 日期（方便查詢）                                       |
 | `time_only`    | string | 時間（方便視覺化）                                      |
 
-對應圖模式：
+建立圖關係：
 ```cypher
-(:Sensor)-[:GENERATES]->(:PerformanceData {event_id})-[:ABOUT]->(:BuildingComponent {GlobalId})`
+(:PerformanceData)-[:ABOUT]->(:BuildingComponent)
 ```
 
 #### 1.2.2 Anomaly_Data_300.csv
@@ -135,15 +135,14 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 | `Anomaly`    | string | 異常類型（如 HighTemp, HighEnergy, Composite） |
 | `ai_model`   | string | 若由 AI 模型偵測，則紀錄模型名稱（如 `IForest`）         |
 
-對應圖模式：
-
+語意圖：
 ```cypher
-(:PerformanceData)-[:GENERATES]->(:Anomaly {p_id, Anomaly, ai_model})`
+(:PerformanceData)-[:GENERATES]->(:Anomaly)
 ```
 
 ---
 
-### 1.3 edges/ — Graph Relationships
+### 1.3 edges/ — 圖關係（CSV Edge Lists）
 #### 1.3.1 Edge_MAPS_SENSOR_DATA.csv
 描述感測器與設備間的監測關係。
 
@@ -154,9 +153,8 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 | `Relationship` | 固定為 `MONITORS`             |
 
 匯入 Neo4j 之後對應：
-
 ```cypher
-(:Sensor {sensor_id:Source})-[:MONITORS]->(:BuildingComponent {GlobalId:Target})
+(:Sensor)-[:MONITORS]->(:BuildingComponent)
 ```
 
 #### 1.3.2 Edge_GENERATES.csv
@@ -174,15 +172,15 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 | `date`         |                            |
 | `time_only`    |                            |
 
-在 Graph 中用來建立：
-
+在 Graph 中用來建立Sensor → PerformanceData 的關係。
 ```cypher
-(:Sensor {sensor_id})-[:GENERATES]->(:PerformanceData {event_id})
+(:Sensor)-[:GENERATES]->(:PerformanceData)
 ```
 
 ---
 
-### 1.4 tasks/ — MaintenanceTasks_Generated.csv
+### 1.4 tasks/ — 維運工單（自動生成）
+📄MaintenanceTasks_Generated.csv
 為了支援 TIAA 中 Action 與 Actor 的推理，本研究根據異常類型自動生成示例工單資料。
 | 欄位名稱                | 說明                             |
 | ------------------- | ------------------------------ |
@@ -222,6 +220,9 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
  - 材料碳因子（基於 ICE Database 樣式之合成資料）
  - 能源使用紀錄
  - 對應圖模式：`BuildingComponent → Material → CarbonFactor`，以及 `BuildingComponent → EnergyUse`。
+
+此資料夾提供建材碳因子、BoQ（材料用量）與能源使用資料，以支援
+*語意化碳計算（Explainable Carbon Accounting）*。
 
 ### 2.1 raw/ Demo Schemas
 #### 2.1.1 Carbon_Material_Factors_demo.csv
