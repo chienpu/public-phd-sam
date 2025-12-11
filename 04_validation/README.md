@@ -158,3 +158,26 @@ python 04_validation/metrics/compute_metrics.py
 可得到：
  - 多跳查詢時間（對應論文 Fig 5-12）
  - 圖規模 vs 查詢成本（對應 Scalability 討論段落）
+
+## 📊 4. 試算結果與論文對位
+
+見 metrics/mapping_to_chapter6.md，其中逐一對應：
+ - Table 6-1：Semantic–Action Validation 指標
+ - Table 6-2：EDA Performance 指標
+ - Fig 6-3：TTA 分佈
+ - Fig 6-4：補償命中率
+ - Fig 6-5：Traceability Path results
+ - Fig 6-8：Throughput under IoT load
+
+📝 5. 引用方式（供論文使用）
+
+若需在論文或報告中引用本模組，建議使用以下格式：
+
+本研究之所有指標、公式、效能測試腳本與結果皆收錄於
+**04_validation 模組**（屬於 STRIDE–SAM Reproducibility Repository）。
+
+GitHub Repository：
+https://github.com/chienpu/public-phd-sam
+
+該模組包含：指標定義（含公式圖片）、Cypher 查詢、TTA 衡量工具、補償流程驗證、
+多跳查詢性能測試與 Scalability 分析，可完整重現論文第 5–6 章之實驗流程。
