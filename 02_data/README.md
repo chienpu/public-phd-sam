@@ -294,6 +294,7 @@ BCcsv -.->|ETL_Import| BC
 SDcsv -.->|ETL_Import| Sensor
 PDcsv -.->|ETL_Import| PDnode
 ADcsv -.->|ETL_Import| Anode
+EGcsv -.->|ETL_Import| MONITORS
 
 %% ============================
 %% CSV Edge Mapping (solid)
