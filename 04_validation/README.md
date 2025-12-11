@@ -169,7 +169,7 @@ python 04_validation/metrics/compute_metrics.py
  - Fig 6-5：Traceability Path results
  - Fig 6-8：Throughput under IoT load
 
-📝 5. 引用方式（供論文使用）
+## 📝 5. 引用方式（供論文使用）
 
 若需在論文或報告中引用本模組，建議使用以下格式：
 
