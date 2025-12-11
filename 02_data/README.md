@@ -258,84 +258,63 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 flowchart LR
 
     %% ============================
-    %% TIAA Semantic Cells
+    %% Raw CSV Data
     %% ============================
-    TIAA["TIAA Semantic Cells"]
-    Trigger["Trigger"]
-    Issue["Issue"]
-    ActionNode["Action"]
-    ActorNode["Actor"]
-
-    TIAA --> Trigger
-    TIAA --> Issue
-    TIAA --> ActionNode
-    TIAA --> ActorNode
-
-    %% ============================
-    %% SAM Layer
-    %% ============================
-    SAM["Semantic Action Management (SAM)"]
-    Semantic["Semantic Interpretation"]
-    Traversal["Graph Traversal Reasoning"]
-    Workflow["Workflow Invocation"]
-    Provenance["Provenance Tracking"]
-
-    Trigger --> Semantic
-    Issue --> Semantic
-    Semantic --> Traversal --> Workflow --> Provenance
-    ActionNode --> Workflow
-    ActorNode --> Provenance
-
-    %% ============================
-    %% STRIDE Layer
-    %% ============================
-    STRIDE["STRIDE Framework"]
-    ETL["Python ETL"]
-    Reasoning["Neo4j Reasoning Engine"]
-    WEngine["Workflow Engine"]
-    PStore["Provenance Storage"]
-
-    STRIDE --> ETL --> Reasoning --> WEngine --> PStore
-
-    Semantic --> Reasoning
-    Traversal --> Reasoning
-    Workflow --> WEngine
-    Provenance --> PStore
-
-    %% ============================
-    %% Graph Schema Layer
-    %% ============================
-    subgraph PG["Schema Layer"]
-        Sensor["Sensor"]
-        BC["BuildingComponent"]
-        PD["PerformanceData"]
-        Anomaly["Anomaly"]
-        Task["MaintenanceTask"]
-        Act["Actor"]
-
-        Sensor -->|MONITORS| BC
-        Sensor -->|GENERATES| PD
-        PD -->|ABOUT| BC
-        PD -->|GENERATES| Anomaly
-        Anomaly -->|TRIGGERS| Task
-        Task -->|ASSIGNED_TO| Act
+    subgraph RAW["Raw CSV Data"]
+        BCcsv["BuildingComponent_Dataset.csv"]
+        SDcsv["Sensor_Data_300.csv"]
+        PDcsv["Performance_Data_300.csv"]
+        ADcsv["Anomaly_Data_300.csv"]
+        EMcsv["Edge_MAPS_SENSOR_DATA.csv"]
+        EGcsv["Edge_GENERATES.csv"]
     end
 
-    Reasoning --> PG
+    %% ============================
+    %% Neo4j Graph Schema
+    %% ============================
+    subgraph SCHEMA["Property Graph Schema"]
+        Sensor["Sensor"]
+        BC["BuildingComponent"]
+        PDnode["PerformanceData"]
+        Anode["Anomaly"]
+        Task["MaintenanceTask"]
+        Actor["Actor"]
+    end
+
+    %% ============================
+    %% ETL Imports (Dashed Line)
+    %% ============================
+    BCcsv -.->|ETL_Import| BC
+    SDcsv -.->|ETL_Import| Sensor
+    PDcsv -.->|ETL_Import| PDnode
+    ADcsv -.->|ETL_Import| Anode
+
+    %% ============================
+    %% Edge Mapping from CSV
+    %% ============================
+    EMcsv -->|MONITORS| Sensor
+    Sensor --> BC
+
+    EGcsv -->|GENERATES| Sensor
+    Sensor --> PDnode
+
+    %% ============================
+    %% Semantic Schema Relations
+    %% ============================
+    PDnode -->|ABOUT| BC
+    PDnode -->|GENERATES| Anode
+    Anode -->|TRIGGERS| Task
+    Task -->|ASSIGNED_TO| Actor
 
 
     %% ============================
-    %% CLASS DEFINITIONS
+    %% CLASS DEFINITIONS (GitHub Safe)
     %% ============================
-    classDef tiaa fill:#F3E5F5;
-    classDef sam fill:#E3F2FD;
-    classDef stride fill:#E8F5E9;
+    classDef raw fill:#ECEFF1;
     classDef schema fill:#FFF8E1;
+    classDef etlstroke stroke-dasharray: 5 5;
 
-    class TIAA,Trigger,Issue,ActionNode,ActorNode tiaa;
-    class SAM,Semantic,Traversal,Workflow,Provenance sam;
-    class STRIDE,ETL,Reasoning,WEngine,PStore stride;
-    class Sensor,BC,PD,Anomaly,Task,Act schema;
-
+    class BCcsv,SDcsv,PDcsv,ADcsv,EMcsv,EGcsv raw;
+    class Sensor,BC,PDnode,Anode,Task,Actor schema;
 
 ```
