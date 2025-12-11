@@ -79,5 +79,5 @@
 
 ## 🧮 2. 指標定義（含圖片）
 ### 1. 事件至行動延遲（TTA）
-事件觸發到行動開始的時間差： ![TTA Formula](formulas/TTA_formula.png)
+事件觸發到行動開始的時間差： <img src="./formulas/TTA_formula.png" width="180"/>
 
