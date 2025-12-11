@@ -28,10 +28,20 @@
 
 以下為 SAM／STRIDE ontology 在三層語意結構（TIAA → SAM → STRIDE）中的定位，並展示核心 Graph Schema（BuildingComponent, Sensor, PerformanceData, Anomaly, Task, Actor）。
 
+> 圖中以**紫色表示 TIAA（語意行動單元）**、**藍色表示 SAM（語意推理與行動管理）**、**綠色表示 STRIDE（系統執行層）**、**黃色表示 Property Graph Schema（底層資料結構）**，用以強調本研究的跨層語意框架。
 > 此圖將同時用於 Appendix A.1 與研究簡報。
+
 
 ```mermaid
 flowchart TD
+
+    %% ===========================
+    %% Color Definitions
+    %% ===========================
+    classDef tiaa fill:#EDE7F6,stroke:#5E35B1,stroke-width:1px,color:#000;
+    classDef sam fill:#E3F2FD,stroke:#1565C0,stroke-width:1px,color:#000;
+    classDef stride fill:#E8F5E9,stroke:#2E7D32,stroke-width:1px,color:#000;
+    classDef pgschema fill:#FFFDE7,stroke:#F9A825,stroke-width:1px,color:#000;
 
     %% ===========================
     %% TIAA Layer
@@ -46,6 +56,9 @@ flowchart TD
     TIAA --> Issue
     TIAA --> ActionNode
     TIAA --> ActorNode
+
+    class TIAA,Trigger,Issue,ActionNode,ActorNode tiaa
+
 
     %% ===========================
     %% SAM Layer
@@ -63,6 +76,9 @@ flowchart TD
     ActionNode --> Workflow
     ActorNode --> Provenance
 
+    class SAM,Semantic,Traversal,Workflow,Provenance sam
+
+
     %% ===========================
     %% STRIDE Layer
     %% ===========================
@@ -79,6 +95,9 @@ flowchart TD
     Workflow --> WorkflowExec
     Provenance --> Logging
 
+    class STRIDE,ETL,Reasoning,WorkflowExec,Logging stride
+
+
     %% ===========================
     %% GRAPH SCHEMA LAYER
     %% ===========================
@@ -90,14 +109,17 @@ flowchart TD
         Task["MaintenanceTask"]
         ActorEnt["Actor"]
 
-        Sensor -->|"MONITORS"| BC
-        Sensor -->|"GENERATES"| PD
-        PD -->|"GENERATES"| Anomaly
-        Anomaly -->|"TRIGGERS"| Task
-        Task -->|"ASSIGNED_TO"| ActorEnt
+        Sensor -- MONITORS --> BC
+        Sensor -- GENERATES --> PD
+        PD -- GENERATES --> Anomaly
+        Anomaly -- TRIGGERS --> Task
+        Task -- ASSIGNED_TO --> ActorEnt
     end
 
+    class GraphSchema,BC,Sensor,PD,Anomaly,Task,ActorEnt pgschema
+
     Reasoning --> GraphSchema
+
 
 ```
 

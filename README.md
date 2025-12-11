@@ -74,14 +74,14 @@ flowchart LR
 
 ## 📚 論文章節對應表
 
-| Repository Folder          | 對應論文章節 / 內容                                      |
-|----------------------------|----------------------------------------------------------|
-| `01_ontology_schema/`      | Ch. 3.3（本體開發與資料模型）、Ch. 4.1（系統架構）        |
-| `02_data/`                 | Ch. 4（PdM 案例、碳管理案例、動態本體案例之輸入資料）     |
-| `03_execution/`            | Ch. 4.2–4.3（ETL 管線、推理邏輯、工作流觸發設計）         |
-| `04_validation/`           | Ch. 5（效能實驗、TTA 測量、traceability、scalability）    |
-| `05_workflows/`            | 附錄（Power Automate / n8n 工作流設計）                  |
-| `docs/`                    | 全篇論文之圖示、流程圖、可重現性說明文件                |
+| Repository Folder          | 對應論文章節 / 說明                                                         |
+|----------------------------|----------------------------------------------------------------------------|
+| `01_ontology_schema/`      | **Ch. 4**（語意行動管理方法論）— TIAA、SAM、Graph-Native 模型、Ontology Schema |
+| `02_data/`                 | **Ch. 6**（案例驗證）— PdM / SID-CM 輸入資料、模擬資料、IFC 對映檔           |
+| `03_execution/`            | **Ch. 5.3–5.4**（技術棧與語意推理）— ETL、Cypher 推理、API Trigger          |
+| `04_validation/`           | **Ch. 6**（實驗驗證）— TTA、Latency、Traceability、Scalability 實驗與結果生成 |
+| `05_workflows/`            | **Ch. 5.2**（微架構與工作流）— Power Automate / n8n 流程原型與 BPMN 設計     |
+| `docs/`                    | 附錄（Appendix A–D）— 圖示、規格文件、重現性（Reproducibility）說明         |
 
 ---
 
