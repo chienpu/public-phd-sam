@@ -1,7 +1,13 @@
 
-# 04_validation
+# 04_validation— STRIDE/SAM 評估與結果重現工具
 
-本資料夾包含所有與 **效能、TTA、traceability、scalability** 相關的實驗與分析工具。  
+本資料夾提供 語意行動管理（SAM）/ STRIDE 框架的所有驗證方法、指標量測腳本、查詢範例、與實驗結果格式。
+目的在於重現論文第 6 章的四大評估面向：
+1. Semantic–Action Validation（語意–行動驗證）
+2. Event-Driven Architecture (EDA) Performance（事件驅動效能）
+3. Traceability & Governance（可追溯性與治理）
+4. Scalability（可擴展性與多跳查詢效率）
+所有工具均以 **可重現（Reproducible）** 為優先設計，並與 02_data/、03_execution/ 的資料格式、推理腳本與工作流事件日誌完全對應。
 
 ## 結構
 
