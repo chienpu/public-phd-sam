@@ -44,41 +44,21 @@
 └─ README.md                       ← 本文件
 ```
 
-## 主要內容
+## 1. 評估目的與對應論文章節
 
-### `query_performance.cypher`
+| 評估項目                             | 論文章節      | 本資料夾提供                            |
+| -------------------------------- | --------- | --------------------------------- |
+| **事件至行動延遲（TTA）**                 | Ch. 6.2.1 | compute_metrics.py、workflow_logs/ |
+| **可追溯性（Traceability）**           | Ch. 6.2.2 | traceability_check.cypher         |
+| **可移植性（Portability）**            | Ch. 6.2.3 | 由 PdM/SID-CM 兩案例資料驗證              |
+| **補償命中率（Compensation Hit Rate）** | Ch. 6.2.4 | compensation_log.csv              |
+| **Latency / Throughput**         | Ch. 6.3   | query_performance.cypher          |
+| **多跳查詢效率（Scalability）**          | Ch. 6.4   | scalability 測試說明                  |
 
-- 用於測試多跳圖遍歷的查詢效能，包括：  
-  - 從 `Anomaly` 追溯至 `BuildingComponent`、`Space`、`Floor`、`Building` 等多層級結構  
-  - 在不同圖規模（節點數、關係數）下，量測平均響應時間  
+## 2. 指標定義（摘要）
 
-### `TTA_measurement_tool.py`
+完整的 LaTeX 公式請見 metrics/formulas.md。
 
-- 功能：  
-  - 分析由 `workflow_trigger_api.py` 所產生的 log（包含請求與回應時間戳）  
-  - 計算 event → action 的 latency（TTA）  
-  - 匯出 `tta_log.csv` 與基本統計指標（平均值、分佈等）  
-
-### `traceability_check.cypher`
-
-- 功能：  
-  - 驗證每一個 `MaintenanceTask` 是否能夠沿著圖譜追溯至對應 `Anomaly`、`Sensor`、`BuildingComponent`、`WorkflowRun` 等  
-  - 產出可視化用資料（例如 `traceability_graph.*`）  
-
-### `notebooks/analysis.ipynb`
-
-- 以 Jupyter Notebook 彙整：  
-  - TTA 統計圖表（分佈、箱型圖等）  
-  - latency vs. graph size 的關係  
-  - traceability completeness（百分比）  
-
----
-
-## 如何重現論文中的指標
-
-1. 執行 `03_execution/` 下的 ETL、推理與工作流觸發腳本  
-2. 確認 `RESULTS/` 資料夾產生：  
-   - `tta_log.csv`  
-   - `latency_results.csv`  
-3. 執行 `notebooks/analysis.ipynb` 以產生統計數據與圖像  
-4. 將分析結果與論文中的表格與圖（Chapter 5）對照，即可完成重現  
+$$
+\mathrm{TTA} = t_{\text{action\_start}} - t_{\text{trigger\_emit}}
+$$
