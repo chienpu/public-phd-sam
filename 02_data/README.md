@@ -318,3 +318,59 @@ linkStyle 0,1,2,3,4,5 stroke:#BDBDBD,stroke-dasharray:4 4;
 
 ```
 
+## 4. Cypher 匯入與關係建立範例
+
+以下為簡化之匯入與關係建立示例，實際完整腳本請參考 03_execution/：
+```cypher
+// 建立 Sensor
+LOAD CSV WITH HEADERS FROM 'file:///02_data/PdM_HVAC/raw/Sensor_Data_300.csv' AS row
+MERGE (s:Sensor {sensor_id: row.sensor_id});
+
+// 建立 BuildingComponent
+LOAD CSV WITH HEADERS FROM 'file:///02_data/PdM_HVAC/raw/BuildingComponent_Dataset.csv' AS row
+MERGE (c:BuildingComponent {GlobalId: row.GlobalId})
+  ON CREATE SET c.Name = row.Name, c.TypeOfBC = row.TypeOfBC;
+
+// 建立 PerformanceData
+LOAD CSV WITH HEADERS FROM 'file:///02_data/PdM_HVAC/processed/Performance_Data_300.csv' AS row
+MERGE (p:PerformanceData {event_id: toInteger(row.event_id)})
+  SET p.metric = row.MetricName,
+      p.value  = toFloat(row.Value),
+      p.timestamp = row.update_end;
+
+// 建立 MONITORS 關係
+LOAD CSV WITH HEADERS FROM 'file:///02_data/PdM_HVAC/edges/Edge_MAPS_SENSOR_DATA.csv' AS row
+MATCH (s:Sensor {sensor_id: row.Source})
+MATCH (c:BuildingComponent {GlobalId: row.Target})
+MERGE (s)-[:MONITORS]->(c);
+
+// 建立 GENERATES 關係（Sensor → PerformanceData）
+LOAD CSV WITH HEADERS FROM 'file:///02_data/PdM_HVAC/edges/Edge_GENERATES.csv' AS row
+MATCH (s:Sensor {sensor_id: row.sensor_id})
+MATCH (p:PerformanceData {event_id: toInteger(row.event_id)})
+MERGE (s)-[:GENERATES]->(p);
+
+```
+
+## 5. 與 STRIDE 架構之對位
+
+ - Data Integration Layer
+   - 對應：PdM_HVAC/raw/、Carbon_SIDCM/raw/
+   - 角色：從異質資料源（BIM, IoT, Logs）取得原始資料並清理。
+
+ - Knowledge & Data Management Layer
+
+對應：PdM_HVAC/processed/、Carbon_SIDCM/processed/
+
+角色：將資料轉換為符合 Ontology / Graph Schema 的實例。
+
+Automation Orchestration Layer
+
+對應：PdM_HVAC/tasks/、PdM_HVAC/actors/ 與 03_execution 的推理腳本。
+
+角色：根據 Anomaly 產生 MaintenanceTask，並指派 Actor。
+
+Visualization & Governance Layers
+
+由 04_validation 與外部 BI / Dashboard 工具使用本資料中的輸出結果，
+並透過 Neo4j 查詢進行 TTA / Traceability 評估。
