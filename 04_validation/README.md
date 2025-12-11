@@ -121,7 +121,7 @@
 python 03_execution/run_all.py
 ```
 
-步驟二：執行 compute_metrics.py（自動計算所有指標）
+### 步驟二：執行 compute_metrics.py（自動計算所有指標）
 
 此工具會：
  - 計算 TTA（由 IoT event 與 workflow start 時間）
@@ -139,3 +139,13 @@ python 04_validation/metrics/compute_metrics.py
  - `RESULTS/latency_results.csv`
  - `RESULTS/compensation_rate.csv`
  - `RESULTS/summary_statistics.md`
+
+### 步驟三：跑 Cypher 查詢以產生 traceability 結果
+```bash
+:load 04_validation/traceability/traceability_check.cypher
+```
+
+輸出於：
+ - `RESULTS/traceability_report.md`
+ - `traceability/examples/*.png`（可直接插入論文第六章）
+
