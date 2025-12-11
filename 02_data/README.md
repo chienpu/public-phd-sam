@@ -256,31 +256,52 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 
 ```mermaid
 flowchart LR
-    subgraph RawData[Raw CSV Data]
-        SD[Sensor_Data_300.csv]
-        BC[BuildingComponent_Dataset.csv]
-        PD[Performance_Data_300.csv]
-        AD[Anomaly_Data_300.csv]
-        EM[Edge_MAPS_SENSOR_DATA.csv]
-        EG[Edge_GENERATES.csv]
+
+    %% -------------------------
+    %% Raw CSV Data
+    %% -------------------------
+    subgraph RawData["Raw CSV Data"]
+        SD["Sensor_Data_300.csv"]
+        BC["BuildingComponent_Dataset.csv"]
+        PD["Performance_Data_300.csv"]
+        AD["Anomaly_Data_300.csv"]
+        EM["Edge_MAPS_SENSOR_DATA.csv"]
+        EG["Edge_GENERATES.csv"]
     end
 
-    subgraph Graph[Neo4j Property Graph Schema]
-        SNode[Sensor]
-        BCNode[BuildingComponent]
-        PDNode[PerformanceData]
-        ANode[Anomaly]
-        TNode[MaintenanceTask]
-        ActorNode[Actor]
+    %% -------------------------
+    %% Graph Schema
+    %% -------------------------
+    subgraph Graph["Neo4j Property Graph Schema"]
+        SNode["Sensor"]
+        BCNode["BuildingComponent"]
+        PDNode["PerformanceData"]
+        ANode["Anomaly"]
+        TNode["MaintenanceTask"]
+        ActorNode["Actor"]
     end
 
-    SD -->|ETL (03_execution)| PDNode
-    BC -->|ETL| BCNode
-    PD -->|ETL| PDNode
-    AD -->|ETL| ANode
-    EM -->|MONITORS| SNode -.-> BCNode
-    EG -->|GENERATES| SNode -.-> PDNode
+    %% -------------------------
+    %% ETL → Graph
+    %% -------------------------
+    SD -->|ETL_Import| PDNode
+    BC -->|ETL_Import| BCNode
+    PD -->|ETL_Import| PDNode
+    AD -->|ETL_Import| ANode
 
+    %% -------------------------
+    %% Edges from CSV
+    %% -------------------------
+    EM -->|MONITORS| SNode
+    SNode --> BCNode
+
+    EG -->|GENERATES| SNode
+    SNode --> PDNode
+
+    %% -------------------------
+    %% PdM Semantic Edges
+    %% -------------------------
     ANode -->|TRIGGERS| TNode
     TNode -->|ASSIGNED_TO| ActorNode
+
 ```
