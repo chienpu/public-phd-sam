@@ -257,51 +257,54 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 ```mermaid
 flowchart LR
 
-    %% -------------------------
+    %% ============================
     %% Raw CSV Data
-    %% -------------------------
-    subgraph RawData["Raw CSV Data"]
-        SD["Sensor_Data_300.csv"]
-        BC["BuildingComponent_Dataset.csv"]
-        PD["Performance_Data_300.csv"]
-        AD["Anomaly_Data_300.csv"]
-        EM["Edge_MAPS_SENSOR_DATA.csv"]
-        EG["Edge_GENERATES.csv"]
+    %% ============================
+    subgraph Raw["Raw CSV Data"]
+        BCcsv["BuildingComponent_Dataset.csv"]
+        SDcsv["Sensor_Data_300.csv"]
+        PDcsv["Performance_Data_300.csv"]
+        ADcsv["Anomaly_Data_300.csv"]
+        EMcsv["Edge_MAPS_SENSOR_DATA.csv"]
+        EGcsv["Edge_GENERATES.csv"]
     end
 
-    %% -------------------------
-    %% Graph Schema
-    %% -------------------------
+    %% ============================
+    %% Neo4j Graph Schema
+    %% ============================
     subgraph Graph["Neo4j Property Graph Schema"]
-        SNode["Sensor"]
-        BCNode["BuildingComponent"]
-        PDNode["PerformanceData"]
-        ANode["Anomaly"]
-        TNode["MaintenanceTask"]
-        ActorNode["Actor"]
+        Sensor["Sensor"]
+        BC["BuildingComponent"]
+        PDnode["PerformanceData"]
+        Anode["Anomaly"]
+        Task["MaintenanceTask"]
+        Actor["Actor"]
     end
 
-    %% -------------------------
-    %% ETL → Graph
-    %% -------------------------
-    SD -->|ETL_Import| PDNode
-    BC -->|ETL_Import| BCNode
-    PD -->|ETL_Import| PDNode
-    AD -->|ETL_Import| ANode
+    %% ============================
+    %% ETL Imports
+    %% ============================
+    BCcsv -->|ETL_Import| BC
+    SDcsv -->|ETL_Import| Sensor
+    PDcsv -->|ETL_Import| PDnode
+    ADcsv -->|ETL_Import| Anode
 
-    %% -------------------------
-    %% Edges from CSV
-    %% -------------------------
-    EM -->|MONITORS| SNode
-    SNode --> BCNode
+    %% ============================
+    %% Edge Mapping from CSV
+    %% ============================
+    EMcsv -->|MONITORS| Sensor
+    Sensor --> BC
 
-    EG -->|GENERATES| SNode
-    SNode --> PDNode
+    EGcsv -->|GENERATES| Sensor
+    Sensor --> PDnode
 
-    %% -------------------------
-    %% PdM Semantic Edges
-    %% -------------------------
-    ANode -->|TRIGGERS| TNode
-    TNode -->|ASSIGNED_TO| ActorNode
+    %% ============================
+    %% Semantic Schema Relations
+    %% ============================
+    PDnode -->|ABOUT| BC
+    PDnode -->|GENERATES| Anode
+    Anode -->|TRIGGERS| Task
+    Task -->|ASSIGNED_TO| Actor
+
 
 ```
