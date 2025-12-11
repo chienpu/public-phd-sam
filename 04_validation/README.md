@@ -10,21 +10,38 @@
    
 所有工具均以 **可重現（Reproducible）** 為優先設計，並與 02_data/、03_execution/ 的資料格式、推理腳本與工作流事件日誌完全對應。
 
-## 結構
+## 📁 資料夾結構
 
 ```text
 04_validation/
-├─ query_performance.cypher
-├─ TTA_measurement_tool.py
-├─ traceability_check.cypher
-├─ notebooks/
-│  └─ analysis.ipynb
+├─ metrics/
+│   ├─ formulas.md                 ← 所有指標的定義與 LaTeX 公式（與論文對應）
+│   ├─ compute_metrics.py          ← 自動計算全指標（TTA, latency…）
+│   └─ mapping_to_chapter6.md      ← 指標如何對應論文第六章
+│
+├─ traceability/
+│   ├─ traceability_check.cypher   ← 可追溯性驗證查詢
+│   ├─ traceability_explain.cypher ← 展開責任鏈（PROV-Chain）
+│   └─ examples/                   ← 產生供論文繪圖的圖譜截圖資料
+│
+├─ performance/
+│   ├─ query_performance.cypher    ← 多跳查詢與 scalability 測試
+│   ├─ stress_test_cypher.md       ← 壓力測試說明（提升節點/邊數）
+│   └─ throughput_measurement.md   ← 吞吐量與事件流量壓測流程
+│
+├─ workflow_logs/
+│   ├─ workflow_events_schema.md   ← 工作流日誌欄位定義（TTA/補償流程所需）
+│   ├─ sample_workflow_log.csv     ← 範例（可直接跑指標）
+│   └─ compensation_log.csv        ← 補償命中率實驗用
+│
 ├─ RESULTS/
-│  ├─ latency_results.csv
-│  ├─ tta_log.csv
-│  ├─ traceability_graph.png
-│  └─ summary_statistics.md
-└─ README.md
+│   ├─ tta_log.csv                 ← 由 compute_metrics.py 產生
+│   ├─ latency_results.csv         ← query 性能測試結果
+│   ├─ traceability_report.md      ← 自動摘要（可直接貼到論文）
+│   ├─ compensation_rate.csv       ← 補償命中率結果
+│   └─ summary_statistics.md       ← 全面統計摘要
+│
+└─ README.md                       ← 本文件
 ```
 
 ## 主要內容
