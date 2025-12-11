@@ -7,6 +7,7 @@
 2. Event-Driven Architecture (EDA) Performance（事件驅動效能）
 3. Traceability & Governance（可追溯性與治理）
 4. Scalability（可擴展性與多跳查詢效率）
+   
 所有工具均以 **可重現（Reproducible）** 為優先設計，並與 02_data/、03_execution/ 的資料格式、推理腳本與工作流事件日誌完全對應。
 
 ## 結構
