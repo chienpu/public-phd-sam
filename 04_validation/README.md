@@ -14,6 +14,14 @@
 
 ```text
 04_validation/
+├─ formulas/
+│   ├─ TTA_formula.png
+│   ├─ Latency_formula.png
+│   ├─ Throughput_formula.png
+│   ├─ Loss_formula.png
+│   ├─ Portability_formula.png
+│   └─ Compensation_formula.png
+│
 ├─ metrics/
 │   ├─ formulas.md                 ← 所有指標的定義與 LaTeX 公式（與論文對應）
 │   ├─ compute_metrics.py          ← 自動計算全指標（TTA, latency…）
