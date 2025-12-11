@@ -226,6 +226,7 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 
 ### 2.1 raw/ Demo Schemas
 #### 2.1.1 Carbon_Material_Factors_demo.csv
+材料碳排因子（類 ICE Demo）。
 
 | 欄位名稱                     | 說明                  |
 | ------------------------ | ------------------- |
@@ -236,6 +237,8 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 | `source`                 | 資料來源（如 `ICE_demo`）  |
 
 #### 2.1.2 Carbon_Component_BoQ_demo.csv
+建築構件 → 材料 → 數量。
+
 | 欄位名稱            | 說明                                       |
 | --------------- | ---------------------------------------- |
 | `component_id`  | 對應 `BuildingComponent.GlobalId`          |
@@ -245,6 +248,7 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 | `stage`         | 生命週期階段（如 A1–A3, A4, A5）                  |
 
 #### 2.1.3 Carbon_Energy_Use_demo.csv
+營運階段能源使用資料。
 
 | 欄位名稱          | 說明                              |
 | ------------- | ------------------------------- |
@@ -254,8 +258,45 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 | `kwh`         | 用電量（kWh）                        |
 | `scope`       | 範疇（如 `Operational`, `Embodied`） |
 
-
 ---
+
+### 2.2 processed/ — Graph Nodes + Relationships
+#### 2.2.1 📄 SIDCM_Graph_Nodes_demo.csv
+**Purpose:**  
+Defines nodes for materials, components, meters, and emission summaries.
+
+**Schema:**
+
+| 欄位名稱        | 型別   | 說明                                    |
+|--------------|--------|-------------------------------------------------|
+| `node_id`    | string | Unique node identifier                          |
+| `node_label` | string | Label(s) used in the graph (e.g., Material)     |
+| `node_type`  | string | Logical type (Material, Component, Meter, etc.) |
+| `properties` | string | JSON-style string for additional attributes     |
+
+Example `node_label` and `node_type` combinations:
+
+- `Material` / `Material`
+- `BuildingComponent` / `Component`
+- `EnergyMeter` / `Meter`
+- `CarbonSummary` / `EmissionAggregate`
+
+#### 2.2.2 📄 SIDCM_Graph_Relationships_demo.csv
+
+**Purpose:**  
+Defines relationships between nodes (e.g., component–material, component–space, meter–component).
+
+**Schema:**
+
+| 欄位名稱          | 型別   | 說明                                       |
+|----------------|--------|---------------------------------------------------|
+| `rel_id`       | string | Unique relationship ID                            |
+| `start_node_id`| string | Start node (`node_id`)                            |
+| `end_node_id`  | string | End node (`node_id`)                              |
+| `rel_type`     | string | Relationship type (e.g., USES_MATERIAL, SERVES)  |
+| `properties`   | string | JSON-style string for additional attributes       |
+
+These demo CSVs are used to illustrate how SID-CM can be mapped onto the STRIDE knowledge graph and integrated with PdM or other operational data.
 
 ## 3. PdM Data Flow 與 Graph Schema（Mermaid）
 
