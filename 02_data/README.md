@@ -14,7 +14,7 @@
 
 ---
 
-## 目錄結構
+## 📂 目錄結構總覽
 
 ```text
 02_data/
@@ -55,6 +55,13 @@
 ---
 
 ## 1. PdM / HVAC Case Datasets
+PdM_HVAC/ 內的資料集用於：
+ - 建立 HVAC 情境之語意圖譜（Sensors、BuildingComponents、PerformanceData、Anomaly）
+ - 驗證 STRIDE 的事件推理與工單派工流程（TIAA → SAM → STRIDE）
+ - 執行 TTA（Time-to-Action）與 Traceability 實驗
+ - 驗證圖原生推理效率（Graph-native traversal）
+其子資料夾說明如下：
+
 ### 1.1 raw/ — 感測與設備資料
 #### 1.1.1 Sensor_Data_300.csv
 高頻感測器輸入資料，用於模擬 HVAC 之 energy / temperature 等觀測值。
@@ -67,13 +74,13 @@
 | `Value`      | float  | 觀測值                             |
 | `Timestamp`  | string | 觀測時間（ISO 8601）                  |
 
-對應圖模式：
+Neo4j 節點關係（簡化）：
 ```cypher
-(:Sensor {sensor_id})-[:GENERATES]->(:PerformanceData {event_id})
+(:Sensor)-[:GENERATES]->(:PerformanceData)
 ```
 
 #### 1.1.2 BuildingComponent_Dataset.csv
-BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
+BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
 
 | 欄位名稱              | 型別     | 說明                                   |
 | ----------------- | ------ | ------------------------------------ |
@@ -87,7 +94,7 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 
 對應圖模式：
 ```cypher
-(:BuildingComponent {GlobalId, TypeOfBC, Name, ...})
+(:BuildingComponent {GlobalId})
 ```
 
 ---
