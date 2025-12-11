@@ -86,3 +86,59 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 
 對應圖模式：
 `(:BuildingComponent {GlobalId, TypeOfBC, Name, ...})`
+
+---
+
+### 1.2 processed/ — 數據整理與異常標註
+#### 1.2.1 Performance_Data_300.csv
+由 raw 觀測加上設備對映與時間切片後產生的性能資料。
+
+| 欄位名稱           | 型別     | 說明                                             |
+| -------------- | ------ | ---------------------------------------------- |
+| `event_id`     | int    | PerformanceData ID（對應原始觀測）                     |
+| `sensor_id`    | string | 感測器 ID                                         |
+| `global_id`    | string | 建物設備 GlobalId（對應 `BuildingComponent.GlobalId`） |
+| `MetricName`   | string | 觀測類型                                           |
+| `Value`        | float  | 數值                                             |
+| `update_start` | string | 數值起始時間（例如 aggregation window 起點）               |
+| `update_end`   | string | 數值終止時間                                         |
+| `date`         | string | 日期（方便查詢）                                       |
+| `time_only`    | string | 時間（方便視覺化）                                      |
+
+對應圖模式：
+`(:Sensor)-[:GENERATES]->(:PerformanceData {event_id})-[:ABOUT]->(:BuildingComponent {GlobalId})`
+
+#### 1.2.2 Anomaly_Data_300.csv
+基於 PerformanceData 之推理或 AI 模型輸出的異常標註。
+
+| 欄位名稱         | 型別     | 說明                                      |
+| ------------ | ------ | --------------------------------------- |
+| `p_id`       | int    | Anomaly ID（Primary Key）                 |
+| `event_id`   | int    | 對應之 PerformanceData 事件 ID               |
+| `sensor_id`  | string | 觸發此異常的感測器                               |
+| `global_id`  | string | 所屬設備 GlobalId                           |
+| `MetricName` | string | 相關量測類型                                  |
+| `Value`      | float  | 觸發異常時的觀測值                               |
+| `Timestamp`  | string | 異常發生時間                                  |
+| `Anomaly`    | string | 異常類型（如 HighTemp, HighEnergy, Composite） |
+| `ai_model`   | string | 若由 AI 模型偵測，則紀錄模型名稱（如 `IForest`）         |
+
+對應圖模式：
+
+`(:PerformanceData)-[:GENERATES]->(:Anomaly {p_id, Anomaly, ai_model})`
+
+### 1.3 edges/ — Graph Relationships
+#### 1.3.1 Edge_MAPS_SENSOR_DATA.csv
+描述感測器與設備間的監測關係。
+
+| 欄位名稱           | 說明                         |
+| -------------- | -------------------------- |
+| `Source`       | Sensor ID（sensor_id）       |
+| `Target`       | BuildingComponent GlobalId |
+| `Relationship` | 固定為 `MONITORS`             |
+
+匯入 Neo4j 之後對應：
+
+```cypher
+(:Sensor {sensor_id:Source})-[:MONITORS]->(:BuildingComponent {GlobalId:Target})
+```
