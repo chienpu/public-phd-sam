@@ -82,8 +82,14 @@
 事件觸發到行動開始的時間差：
 
 <img src="../04_validation/formulas/TTA_formula.png" width="220"/>
-
 來源：CEP / EDA 反應時間衡量方法（Chandy 2016；Teymourian 2009）
 
+### 2.2 延遲（Latency）
+處理單一事件（IoT → 推理 → 工單派送）的端到端延遲：
 
+<img src="../04_validation/formulas/Latency_formula.png" width="220"/>
 
+### 2.3 吞吐量（Throughput）
+單位時間內系統可處理的事件數（events/sec）：
+
+<img src="../04_validation/formulas/Throughput_formula.png" width="220"/>
