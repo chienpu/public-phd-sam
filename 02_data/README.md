@@ -222,4 +222,38 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
  - 能源使用紀錄
  - 對應圖模式：`BuildingComponent → Material → CarbonFactor`，以及 `BuildingComponent → EnergyUse`。
 
+### 2.1 raw/ Demo Schemas
+#### 2.1.1 Carbon_Material_Factors_demo.csv
+
+| 欄位名稱                     | 說明                  |
+| ------------------------ | ------------------- |
+| `material_code`          | 材料代碼                |
+| `description`            | 材料說明                |
+| `unit`                   | 單位（如 kg, m3）        |
+| `factor_kgco2e_per_unit` | 單位碳排（kgCO₂e / unit） |
+| `source`                 | 資料來源（如 `ICE_demo`）  |
+
+---
+
+#### 2.1.2 Carbon_Component_BoQ_demo.csv
+| 欄位名稱            | 說明                                       |
+| --------------- | ---------------------------------------- |
+| `component_id`  | 對應 `BuildingComponent.GlobalId`          |
+| `material_code` | 對應 Carbon_Material_Factors.material_code |
+| `quantity`      | 數量                                       |
+| `unit`          | 單位                                       |
+| `stage`         | 生命週期階段（如 A1–A3, A4, A5）                  |
+
+---
+
+#### 2.1.3 Carbon_Energy_Use_demo.csv
+
+| 欄位名稱          | 說明                              |
+| ------------- | ------------------------------- |
+| `timestamp`   | 用電時間                            |
+| `meter_id`    | 電表或虛擬子系統 ID                     |
+| `building_id` | 建築或區域 ID                        |
+| `kwh`         | 用電量（kWh）                        |
+| `scope`       | 範疇（如 `Operational`, `Embodied`） |
+
 
