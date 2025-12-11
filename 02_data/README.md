@@ -222,7 +222,7 @@ BIM / IFC 匯出的設備清單，用於建立 `:BuildingComponent` 節點。
  - 對應圖模式：`BuildingComponent → Material → CarbonFactor`，以及 `BuildingComponent → EnergyUse`。
 
 此資料夾提供建材碳因子、BoQ（材料用量）與能源使用資料，以支援
-*語意化碳計算（Explainable Carbon Accounting）*。
+**語意化碳計算（Explainable Carbon Accounting）**。
 
 ### 2.1 raw/ Demo Schemas
 #### 2.1.1 Carbon_Material_Factors_demo.csv
