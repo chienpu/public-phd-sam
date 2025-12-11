@@ -359,18 +359,12 @@ MERGE (s)-[:GENERATES]->(p);
    - 角色：從異質資料源（BIM, IoT, Logs）取得原始資料並清理。
 
  - Knowledge & Data Management Layer
+   - 對應：PdM_HVAC/processed/、Carbon_SIDCM/processed/
+   - 角色：將資料轉換為符合 Ontology / Graph Schema 的實例。
 
-對應：PdM_HVAC/processed/、Carbon_SIDCM/processed/
+ - Automation Orchestration Layer
+   - 對應：PdM_HVAC/tasks/、PdM_HVAC/actors/ 與 03_execution 的推理腳本。
+   - 角色：根據 Anomaly 產生 MaintenanceTask，並指派 Actor。
 
-角色：將資料轉換為符合 Ontology / Graph Schema 的實例。
-
-Automation Orchestration Layer
-
-對應：PdM_HVAC/tasks/、PdM_HVAC/actors/ 與 03_execution 的推理腳本。
-
-角色：根據 Anomaly 產生 MaintenanceTask，並指派 Actor。
-
-Visualization & Governance Layers
-
-由 04_validation 與外部 BI / Dashboard 工具使用本資料中的輸出結果，
-並透過 Neo4j 查詢進行 TTA / Traceability 評估。
+ - Visualization & Governance Layers
+   - 由 04_validation 與外部 BI / Dashboard 工具使用本資料中的輸出結果，並透過 Neo4j 查詢進行 TTA / Traceability 評估。
