@@ -264,7 +264,6 @@ flowchart LR
 classDef raw fill=#ECEFF1,stroke=#90A4AE,color=#000,stroke-width=1px;
 classDef graph fill=#FFF8E1,stroke=#BCAAA4,color=#000,stroke-width=1px;
 
-%% default dashed for ETL imports
 linkStyle default stroke=#BDBDBD,stroke-dasharray=4 4;
 
 %% ============================
@@ -278,10 +277,11 @@ subgraph Raw["Raw CSV Data"]
     EMcsv["Edge_MAPS_SENSOR_DATA.csv"]
     EGcsv["Edge_GENERATES.csv"]
 end
+
 class BCcsv,SDcsv,PDcsv,ADcsv,EMcsv,EGcsv raw;
 
 %% ============================
-%% Neo4j Graph Schema
+%% Neo4j Property Graph Schema
 %% ============================
 subgraph Graph["Neo4j Property Graph Schema"]
     Sensor["Sensor"]
@@ -291,10 +291,31 @@ subgraph Graph["Neo4j Property Graph Schema"]
     Task["MaintenanceTask"]
     Actor["Actor"]
 end
+
 class Sensor,BC,PDnode,Anode,Task,Actor graph;
 
 %% ============================
 %% ETL IMPORT (dashed)
-%% ===================
+%% ============================
+BCcsv -.->|ETL_Import| BC
+SDcsv -.->|ETL_Import| Sensor
+PDcsv -.->|ETL_Import| PDnode
+ADcsv -.->|ETL_Import| Anode
 
+%% ============================
+%% CSV Edge Mapping
+%% ============================
+EMcsv -->|MONITORS| Sensor
+EGcsv -->|GENERATES| Sensor
+
+%% ============================
+%% Semantic Graph Relations
+%% ============================
+Sensor -->|MONITORS| BC
+Sensor -->|GENERATES| PDnode
+PDnode -->|ABOUT| BC
+PDnode -->|GENERATES| Anode
+Anode -->|TRIGGERS| Task
+Task -->|ASSIGNED_TO| Actor
 ```
+
