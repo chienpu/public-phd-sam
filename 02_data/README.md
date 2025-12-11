@@ -258,7 +258,7 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 flowchart LR
 
 %% ============================
-%% Style Definitions
+%% Style
 %% ============================
 style Raw fill:#ECEFF1,stroke:#90A4AE,stroke-width:1px,color:#000;
 style Graph fill:#FFF8E1,stroke:#BCAAA4,stroke-width:1px,color:#000;
@@ -288,22 +288,21 @@ subgraph Graph["Neo4j Property Graph Schema"]
 end
 
 %% ============================
-%% ETL IMPORT (dashed only)
+%% ETL IMPORT for Nodes
 %% ============================
 BCcsv -.->|ETL_Import| BC
 SDcsv -.->|ETL_Import| Sensor
 PDcsv -.->|ETL_Import| PDnode
 ADcsv -.->|ETL_Import| Anode
-EGcsv -.->|ETL_Import| MONITORS
 
 %% ============================
-%% CSV Edge Mapping (solid)
+%% ETL IMPORT for Edges
 %% ============================
-EMcsv -->|MONITORS| Sensor
-EGcsv -->|GENERATES| Sensor
+EMcsv -.->|ETL_Import(MONITORS)| Sensor
+EGcsv -.->|ETL_Import(GENERATES)| Sensor
 
 %% ============================
-%% Semantic Graph Relations (solid)
+%% Semantic Graph Relations
 %% ============================
 Sensor -->|MONITORS| BC
 Sensor -->|GENERATES| PDnode
@@ -313,7 +312,8 @@ Anode -->|TRIGGERS| Task
 Task -->|ASSIGNED_TO| Actor
 
 %% Only ETL_Import lines dashed
-linkStyle 0,1,2,3 stroke:#BDBDBD,stroke-dasharray:4 4;
+linkStyle 0,1,2,3,4,5 stroke:#BDBDBD,stroke-dasharray:4 4;
+
 
 ```
 
