@@ -59,6 +59,5 @@
 
 完整的 LaTeX 公式請見 metrics/formulas.md。
 
-$$
-\mathrm{TTA} = t\_{\text{action\_start}} - t\_{\text{trigger\_emit}}
-$$
+![TTA公式](https://latex.codecogs.com/png.image?\dpi{120}\mathrm{TTA}=t_{\text{action\_start}}-t_{\text{trigger\_emit}})
+
