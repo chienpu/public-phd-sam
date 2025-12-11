@@ -258,53 +258,80 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 flowchart LR
 
     %% ============================
-    %% Raw CSV Data
+    %% Class Definitions (Colors)
     %% ============================
-    subgraph Raw["Raw CSV Data"]
-        BCcsv["BuildingComponent_Dataset.csv"]
-        SDcsv["Sensor_Data_300.csv"]
-        PDcsv["Performance_Data_300.csv"]
-        ADcsv["Anomaly_Data_300.csv"]
-        EMcsv["Edge_MAPS_SENSOR_DATA.csv"]
-        EGcsv["Edge_GENERATES.csv"]
+    classDef tiaa fill:#F3E5F5,stroke:#8E24AA,color:#000;
+    classDef sam fill:#E3F2FD,stroke:#1E88E5,color:#000;
+    classDef stride fill:#E8F5E9,stroke:#43A047,color:#000;
+    classDef graph fill:#FFF8E1,stroke:#F9A825,color:#000;
+    
+
+    %% ============================
+    %% TIAA Semantic Cells
+    %% ============================
+    TIAA["TIAA Semantic Cells"]:::tiaa
+    Trigger["Trigger"]:::tiaa
+    Issue["Issue"]:::tiaa
+    ActionNode["Action"]:::tiaa
+    ActorNode["Actor"]:::tiaa
+
+    TIAA --> Trigger
+    TIAA --> Issue
+    TIAA --> ActionNode
+    TIAA --> ActorNode
+
+    %% ============================
+    %% SAM Layer
+    %% ============================
+    SAM["Semantic Action Management (SAM)"]:::sam
+    Semantic["Semantic Interpretation"]:::sam
+    Traversal["Graph Traversal Reasoning"]:::sam
+    Workflow["Workflow Invocation"]:::sam
+    Provenance["Provenance Tracking"]:::sam
+
+    Trigger --> Semantic
+    Issue --> Semantic
+    Semantic --> Traversal --> Workflow --> Provenance
+
+    ActionNode --> Workflow
+    ActorNode --> Provenance
+
+    %% ============================
+    %% STRIDE Layer
+    %% ============================
+    STRIDE["STRIDE Framework"]:::stride
+    ETL["Python ETL"]:::stride
+    Reasoning["Neo4j Reasoning Engine"]:::stride
+    WEngine["Workflow Engine"]:::stride
+    PStore["Provenance Storage"]:::stride
+
+    STRIDE --> ETL --> Reasoning --> WEngine --> PStore
+
+    Semantic --> Reasoning
+    Traversal --> Reasoning
+    Workflow --> WEngine
+    Provenance --> PStore
+
+    %% ============================
+    %% Graph Schema Layer
+    %% ============================
+    subgraph PG["Property Graph Schema"]
+        class PG graph;
+        Sensor["Sensor"]:::graph
+        BC["BuildingComponent"]:::graph
+        PD["PerformanceData"]:::graph
+        Anomaly["Anomaly"]:::graph
+        Task["MaintenanceTask"]:::graph
+        Act["Actor"]:::graph
+
+        Sensor -->|MONITORS| BC
+        Sensor -->|GENERATES| PD
+        PD -->|ABOUT| BC
+        PD -->|GENERATES| Anomaly
+        Anomaly -->|TRIGGERS| Task
+        Task -->|ASSIGNED_TO| Act
     end
 
-    %% ============================
-    %% Neo4j Graph Schema
-    %% ============================
-    subgraph Graph["Neo4j Property Graph Schema"]
-        Sensor["Sensor"]
-        BC["BuildingComponent"]
-        PDnode["PerformanceData"]
-        Anode["Anomaly"]
-        Task["MaintenanceTask"]
-        Actor["Actor"]
-    end
-
-    %% ============================
-    %% ETL Imports
-    %% ============================
-    BCcsv -->|ETL_Import| BC
-    SDcsv -->|ETL_Import| Sensor
-    PDcsv -->|ETL_Import| PDnode
-    ADcsv -->|ETL_Import| Anode
-
-    %% ============================
-    %% Edge Mapping from CSV
-    %% ============================
-    EMcsv -->|MONITORS| Sensor
-    Sensor --> BC
-
-    EGcsv -->|GENERATES| Sensor
-    Sensor --> PDnode
-
-    %% ============================
-    %% Semantic Schema Relations
-    %% ============================
-    PDnode -->|ABOUT| BC
-    PDnode -->|GENERATES| Anode
-    Anode -->|TRIGGERS| Task
-    Task -->|ASSIGNED_TO| Actor
-
+    Reasoning --> PG
 
 ```
