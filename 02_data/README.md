@@ -258,22 +258,13 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 flowchart LR
 
     %% ============================
-    %% Class Definitions (Colors)
-    %% ============================
-    classDef tiaa fill:#F3E5F5,stroke:#8E24AA,color:#000;
-    classDef sam fill:#E3F2FD,stroke:#1E88E5,color:#000;
-    classDef stride fill:#E8F5E9,stroke:#43A047,color:#000;
-    classDef graph fill:#FFF8E1,stroke:#F9A825,color:#000;
-    
-
-    %% ============================
     %% TIAA Semantic Cells
     %% ============================
-    TIAA["TIAA Semantic Cells"]:::tiaa
-    Trigger["Trigger"]:::tiaa
-    Issue["Issue"]:::tiaa
-    ActionNode["Action"]:::tiaa
-    ActorNode["Actor"]:::tiaa
+    TIAA["TIAA Semantic Cells"]
+    Trigger["Trigger"]
+    Issue["Issue"]
+    ActionNode["Action"]
+    ActorNode["Actor"]
 
     TIAA --> Trigger
     TIAA --> Issue
@@ -283,27 +274,26 @@ flowchart LR
     %% ============================
     %% SAM Layer
     %% ============================
-    SAM["Semantic Action Management (SAM)"]:::sam
-    Semantic["Semantic Interpretation"]:::sam
-    Traversal["Graph Traversal Reasoning"]:::sam
-    Workflow["Workflow Invocation"]:::sam
-    Provenance["Provenance Tracking"]:::sam
+    SAM["Semantic Action Management (SAM)"]
+    Semantic["Semantic Interpretation"]
+    Traversal["Graph Traversal Reasoning"]
+    Workflow["Workflow Invocation"]
+    Provenance["Provenance Tracking"]
 
     Trigger --> Semantic
     Issue --> Semantic
     Semantic --> Traversal --> Workflow --> Provenance
-
     ActionNode --> Workflow
     ActorNode --> Provenance
 
     %% ============================
     %% STRIDE Layer
     %% ============================
-    STRIDE["STRIDE Framework"]:::stride
-    ETL["Python ETL"]:::stride
-    Reasoning["Neo4j Reasoning Engine"]:::stride
-    WEngine["Workflow Engine"]:::stride
-    PStore["Provenance Storage"]:::stride
+    STRIDE["STRIDE Framework"]
+    ETL["Python ETL"]
+    Reasoning["Neo4j Reasoning Engine"]
+    WEngine["Workflow Engine"]
+    PStore["Provenance Storage"]
 
     STRIDE --> ETL --> Reasoning --> WEngine --> PStore
 
@@ -316,13 +306,12 @@ flowchart LR
     %% Graph Schema Layer
     %% ============================
     subgraph PG["Property Graph Schema"]
-        class PG graph;
-        Sensor["Sensor"]:::graph
-        BC["BuildingComponent"]:::graph
-        PD["PerformanceData"]:::graph
-        Anomaly["Anomaly"]:::graph
-        Task["MaintenanceTask"]:::graph
-        Act["Actor"]:::graph
+        Sensor["Sensor"]
+        BC["BuildingComponent"]
+        PD["PerformanceData"]
+        Anomaly["Anomaly"]
+        Task["MaintenanceTask"]
+        Act["Actor"]
 
         Sensor -->|MONITORS| BC
         Sensor -->|GENERATES| PD
@@ -333,5 +322,19 @@ flowchart LR
     end
 
     Reasoning --> PG
+
+
+    %% ============================
+    %% CLASS DEFINITIONS (GitHub-safe)
+    %% ============================
+    classDef tiaa fill:#F3E5F5;
+    classDef sam fill:#E3F2FD;
+    classDef stride fill:#E8F5E9;
+    classDef graph fill:#FFF8E1;
+
+    class TIAA,Trigger,Issue,ActionNode,ActorNode tiaa;
+    class SAM,Semantic,Traversal,Workflow,Provenance sam;
+    class STRIDE,ETL,Reasoning,WEngine,PStore stride;
+    class Sensor,BC,PD,Anomaly,Task,Act graph;
 
 ```
