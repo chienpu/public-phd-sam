@@ -114,6 +114,8 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 (:Sensor)-[:GENERATES]->(:PerformanceData {event_id})-[:ABOUT]->(:BuildingComponent {GlobalId})`
 ```
 
+---
+
 #### 1.2.2 Anomaly_Data_300.csv
 基於 PerformanceData 之推理或 AI 模型輸出的異常標註。
 
@@ -135,6 +137,8 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 (:PerformanceData)-[:GENERATES]->(:Anomaly {p_id, Anomaly, ai_model})`
 ```
 
+---
+
 ### 1.3 edges/ — Graph Relationships
 #### 1.3.1 Edge_MAPS_SENSOR_DATA.csv
 描述感測器與設備間的監測關係。
@@ -150,3 +154,72 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 ```cypher
 (:Sensor {sensor_id:Source})-[:MONITORS]->(:BuildingComponent {GlobalId:Target})
 ```
+
+---
+
+#### 1.3.2 Edge_GENERATES.csv
+描述感測器產生 PerformanceData 之關係。
+
+| 欄位名稱           | 說明                         |
+| -------------- | -------------------------- |
+| `event_id`     | PerformanceData 事件 ID      |
+| `sensor_id`    | 來源感測器 ID                   |
+| `global_id`    | 所屬設備 GlobalId（冗餘欄位，方便查詢）   |
+| `MetricName`   | 量測類型                       |
+| `Value`        | 數值                         |
+| `update_start` | 見 Performance_Data_300.csv |
+| `update_end`   |                            |
+| `date`         |                            |
+| `time_only`    |                            |
+
+在 Graph 中用來建立：
+
+```cypher
+(:Sensor {sensor_id})-[:GENERATES]->(:PerformanceData {event_id})
+```
+
+---
+
+### 1.4 tasks/ — MaintenanceTasks_Generated.csv
+為了支援 TIAA 中 Action 與 Actor 的推理，本研究根據異常類型自動生成示例工單資料。
+| 欄位名稱                | 說明                             |
+| ------------------- | ------------------------------ |
+| `task_id`           | 工單 ID（如 `T0001`）               |
+| `anomaly_id`        | 對應 `Anomaly_Data_300.p_id`     |
+| `priority`          | 任務優先權（High / Medium / Low）     |
+| `assigned_actor_id` | 指派之維運人員 ID（對應 Actors.csv）      |
+| `status`            | 工單狀態（Open, InProgress, Closed） |
+| `created_at`        | 建立時間                           |
+| `due_at`            | 建議完成期限                         |
+
+對應圖模式：
+
+```cypher
+(:Anomaly)-[:TRIGGERS]->(:MaintenanceTask)-[:ASSIGNED_TO]->(:Actor)
+```
+
+---
+
+### 1.5 actors/ — Actors.csv（具名維運角色）
+示例欄位：
+
+| actor_id | name          | role       | team       |
+| -------- | ------------- | ---------- | ---------- |
+| Tech01   | Technician_01 | Technician | HVAC_Team  |
+| Tech02   | Technician_02 | Technician | HVAC_Team  |
+| Sup01    | Supervisor_01 | Supervisor | FM_Office  |
+| AIA01    | AI_Agent_01   | AI-Agent   | AI_Service |
+
+
+---
+
+## 2. Carbon_SIDCM — Demo Data for Semantic Digital Thread (SID-CM)
+
+本資料夾提供一組簡化的示例資料，用於展示：
+
+ - 建築構件與材料清單（BoQ）
+ - 材料碳因子（基於 ICE Database 樣式之合成資料）
+ - 能源使用紀錄
+ - 對應圖模式：`BuildingComponent → Material → CarbonFactor`，以及 `BuildingComponent → EnergyUse`。
+
+
