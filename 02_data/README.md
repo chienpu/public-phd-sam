@@ -257,64 +257,65 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 ```mermaid
 flowchart LR
 
-    %% ============================
-    %% Raw CSV Data
-    %% ============================
-    subgraph RAW["Raw CSV Data"]
-        BCcsv["BuildingComponent_Dataset.csv"]
-        SDcsv["Sensor_Data_300.csv"]
-        PDcsv["Performance_Data_300.csv"]
-        ADcsv["Anomaly_Data_300.csv"]
-        EMcsv["Edge_MAPS_SENSOR_DATA.csv"]
-        EGcsv["Edge_GENERATES.csv"]
-    end
+%% ============================
+%% Style Definitions
+%% ============================
+classDef raw fill:#ECEFF1,stroke:#90A4AE,color:#000,stroke-width:1px;
+classDef graph fill:#FFF8E1,stroke:#BCAAA4,color:#000,stroke-width:1px;
+classDef edge fill:#F5F5F5,stroke:#BDBDBD,color:#000,stroke-width:1px;
 
-    %% ============================
-    %% Neo4j Graph Schema
-    %% ============================
-    subgraph SCHEMA["Property Graph Schema"]
-        Sensor["Sensor"]
-        BC["BuildingComponent"]
-        PDnode["PerformanceData"]
-        Anode["Anomaly"]
-        Task["MaintenanceTask"]
-        Actor["Actor"]
-    end
+%% Dashed ETL edges
+linkStyle default stroke:#BDBDBD,stroke-dasharray: 4 4;
 
-    %% ============================
-    %% ETL Imports (Dashed Line)
-    %% ============================
-    BCcsv -.->|ETL_Import| BC
-    SDcsv -.->|ETL_Import| Sensor
-    PDcsv -.->|ETL_Import| PDnode
-    ADcsv -.->|ETL_Import| Anode
+%% ============================
+%% Raw CSV Data
+%% ============================
+subgraph Raw["Raw CSV Data"]
+    BCcsv["BuildingComponent_Dataset.csv"]
+    SDcsv["Sensor_Data_300.csv"]
+    PDcsv["Performance_Data_300.csv"]
+    ADcsv["Anomaly_Data_300.csv"]
+    EMcsv["Edge_MAPS_SENSOR_DATA.csv"]
+    EGcsv["Edge_GENERATES.csv"]
+end
+class BCcsv,SDcsv,PDcsv,ADcsv,EMcsv,EGcsv raw;
 
-    %% ============================
-    %% Edge Mapping from CSV
-    %% ============================
-    EMcsv -->|MONITORS| Sensor
-    Sensor --> BC
+%% ============================
+%% Neo4j Property Graph Schema
+%% ============================
+subgraph Graph["Neo4j Property Graph Schema"]
+    Sensor["Sensor"]
+    BC["BuildingComponent"]
+    PDnode["PerformanceData"]
+    Anode["Anomaly"]
+    Task["MaintenanceTask"]
+    Actor["Actor"]
+end
+class Sensor,BC,PDnode,Anode,Task,Actor graph;
 
-    EGcsv -->|GENERATES| Sensor
-    Sensor --> PDnode
+%% ============================
+%% ETL IMPORT (Dashed)
+%% ============================
+BCcsv -.->|ETL_Import| BC
+SDcsv -.->|ETL_Import| Sensor
+PDcsv -.->|ETL_Import| PDnode
+ADcsv -.->|ETL_Import| Anode
 
-    %% ============================
-    %% Semantic Schema Relations
-    %% ============================
-    PDnode -->|ABOUT| BC
-    PDnode -->|GENERATES| Anode
-    Anode -->|TRIGGERS| Task
-    Task -->|ASSIGNED_TO| Actor
+%% ============================
+%% Edge Mapping from CSV
+%% ============================
+EMcsv -->|MONITORS| Sensor
+EGcsv -->|GENERATES| Sensor
 
+%% ============================
+%% Semantic Property Graph Relations
+%% ============================
+Sensor -->|MONITORS| BC
+Sensor -->|GENERATES| PDnode
+PDnode -->|ABOUT| BC
+PDnode -->|GENERATES| Anode
+Anode -->|TRIGGERS| Task
+Task -->|ASSIGNED_TO| Actor
 
-    %% ============================
-    %% CLASS DEFINITIONS (GitHub Safe)
-    %% ============================
-    classDef raw fill:#ECEFF1;
-    classDef schema fill:#FFF8E1;
-    classDef etlstroke stroke-dasharray: 5 5;
-
-    class BCcsv,SDcsv,PDcsv,ADcsv,EMcsv,EGcsv raw;
-    class Sensor,BC,PDnode,Anode,Task,Actor schema;
 
 ```
