@@ -306,7 +306,15 @@ EGcsv -.->|ETL_Import: GENERATES| Sensor
 %% ============================
 Sensor -->|MONITORS| BC
 Sensor -->|GENERATES| PDnode
-PDnode -->|ABOUT|
+PDnode -->|ABOUT| BC
+PDnode -->|GENERATES| Anode
+Anode -->|TRIGGERS| Task
+Task -->|ASSIGNED_TO| Actor
+
+%% ============================
+%% Link Styling
+%% ============================
+linkStyle 0,1,2,3,4,5 stroke:#BDBDBD,stroke-dasharray:4 4;
 
 ```
 
