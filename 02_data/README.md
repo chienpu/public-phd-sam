@@ -257,6 +257,15 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 ```mermaid
 flowchart LR
 
+%% ============================
+%% Style Definitions
+%% ============================
+style Raw fill:#ECEFF1,stroke:#90A4AE,stroke-width:1px,color:#000;
+style Graph fill:#FFF8E1,stroke:#BCAAA4,stroke-width:1px,color:#000;
+
+%% ============================
+%% Raw CSV Data
+%% ============================
 subgraph Raw["Raw CSV Data"]
     BCcsv["BuildingComponent_Dataset.csv"]
     SDcsv["Sensor_Data_300.csv"]
@@ -266,6 +275,9 @@ subgraph Raw["Raw CSV Data"]
     EGcsv["Edge_GENERATES.csv"]
 end
 
+%% ============================
+%% Neo4j Property Graph Schema
+%% ============================
 subgraph Graph["Neo4j Property Graph Schema"]
     Sensor["Sensor"]
     BC["BuildingComponent"]
@@ -275,17 +287,23 @@ subgraph Graph["Neo4j Property Graph Schema"]
     Actor["Actor"]
 end
 
-%% ETL IMPORT (dashed)
+%% ============================
+%% ETL IMPORT (dashed only)
+%% ============================
 BCcsv -.->|ETL_Import| BC
 SDcsv -.->|ETL_Import| Sensor
 PDcsv -.->|ETL_Import| PDnode
 ADcsv -.->|ETL_Import| Anode
 
-%% CSV Edge Mapping
+%% ============================
+%% CSV Edge Mapping (solid)
+%% ============================
 EMcsv -->|MONITORS| Sensor
 EGcsv -->|GENERATES| Sensor
 
-%% Semantic Graph Relations
+%% ============================
+%% Semantic Graph Relations (solid)
+%% ============================
 Sensor -->|MONITORS| BC
 Sensor -->|GENERATES| PDnode
 PDnode -->|ABOUT| BC
@@ -293,10 +311,8 @@ PDnode -->|GENERATES| Anode
 Anode -->|TRIGGERS| Task
 Task -->|ASSIGNED_TO| Actor
 
-%% Visual Styling (GitHub-safe)
-style Raw fill:#ECEFF1,stroke:#90A4AE,stroke-width:1px,color:#000;
-style Graph fill:#FFF8E1,stroke:#BCAAA4,stroke-width:1px,color:#000;
-linkStyle default stroke:#BDBDBD,stroke-dasharray:4 4;
+%% Only ETL_Import lines dashed
+linkStyle 0,1,2,3 stroke:#BDBDBD,stroke-dasharray:4 4;
 
 ```
 
