@@ -67,7 +67,9 @@
 | `Timestamp`  | string | 觀測時間（ISO 8601）                  |
 
 對應圖模式：
-`(:Sensor {sensor_id})-[:GENERATES]->(:PerformanceData {event_id})`
+```cypher
+(:Sensor {sensor_id})-[:GENERATES]->(:PerformanceData {event_id})
+```
 
 ---
 
@@ -85,7 +87,9 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 | `Sponsor`         | string | 所屬單位／維運責任組織                          |
 
 對應圖模式：
-`(:BuildingComponent {GlobalId, TypeOfBC, Name, ...})`
+```cypher
+(:BuildingComponent {GlobalId, TypeOfBC, Name, ...})
+```
 
 ---
 
@@ -106,7 +110,9 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 | `time_only`    | string | 時間（方便視覺化）                                      |
 
 對應圖模式：
-`(:Sensor)-[:GENERATES]->(:PerformanceData {event_id})-[:ABOUT]->(:BuildingComponent {GlobalId})`
+```cypher
+(:Sensor)-[:GENERATES]->(:PerformanceData {event_id})-[:ABOUT]->(:BuildingComponent {GlobalId})`
+```
 
 #### 1.2.2 Anomaly_Data_300.csv
 基於 PerformanceData 之推理或 AI 模型輸出的異常標註。
@@ -125,7 +131,9 @@ BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 
 對應圖模式：
 
-`(:PerformanceData)-[:GENERATES]->(:Anomaly {p_id, Anomaly, ai_model})`
+```cypher
+(:PerformanceData)-[:GENERATES]->(:Anomaly {p_id, Anomaly, ai_model})`
+```
 
 ### 1.3 edges/ — Graph Relationships
 #### 1.3.1 Edge_MAPS_SENSOR_DATA.csv
