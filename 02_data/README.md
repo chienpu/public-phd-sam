@@ -71,8 +71,6 @@
 (:Sensor {sensor_id})-[:GENERATES]->(:PerformanceData {event_id})
 ```
 
----
-
 #### 1.1.2 BuildingComponent_Dataset.csv
 BIM / IFC 匯出的設備清單，用於建立 :BuildingComponent 節點。
 
