@@ -10,6 +10,7 @@ compute_metrics.py 自動計算。
 
 ### 📌 定義（含 inline 公式圖片）
 <img src="../formulas/TTA_formula.png" width="250"/>
+
 ### 📌 量測方式
 
  - trigger_emit 來自 Sensor / PerformanceData / Anomaly 之 Timestamp
