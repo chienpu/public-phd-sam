@@ -10,7 +10,7 @@ compute_metrics.py 自動計算。
 
 ### 📌 定義（含 inline 公式圖片）
 
-<img src="../04_validation/formulas/TTA_formula.png" width="220"/>
+<img src="../formulas/TTA_formula.png" width="220"/>
 
 ### 📌 量測方式
 
