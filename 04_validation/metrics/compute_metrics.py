@@ -1,186 +1,343 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 """
 compute_metrics.py
--------------------
-自動計算以下指標：
-1. TTA (Time-to-Action)
-2. Latency (Workflow latency)
-3. Throughput (events per second)
-4. Loss Rate
-5. Compensation Hit Rate
-6. Portability 指標（僅紀錄成功案例數）
 
-輸入資料來源：
- - 02_data/PdM_HVAC/processed/Performance_Data_300.csv
- - 04_validation/workflow_logs/sample_workflow_log.csv
- - 04_validation/workflow_logs/compensation_log.csv
+Compute PdM evaluation metrics for the SAM–STRIDE testbed (thesis scenario).
 
-輸出結果：
- - 04_validation/RESULTS/tta_log.csv
- - 04_validation/RESULTS/latency_results.csv
- - 04_validation/RESULTS/compensation_rate.csv
- - 04_validation/RESULTS/summary_statistics.md
+Input (default paths, relative to this script):
+    ../../data/synthetic/pdm/thesis_iot.csv
+    ../../data/synthetic/pdm/thesis_assets.csv
+    ../../data/synthetic/pdm/thesis_workorders.csv
+
+Output (CSV tables, relative to this script):
+    ../../artifacts/tables/tta.csv
+    ../../artifacts/tables/latency.csv
+    ../../artifacts/tables/funnels.csv
+    ../../artifacts/tables/portability.csv
+
+Metrics:
+    - TTA (Time-To-Action)
+    - Latency breakdown (L1–L4)
+    - Compensation funnel (exception → compensated → recovered)
+    - Portability effort (config/setup effort per scenario)
+
+Usage:
+    python compute_metrics.py
+    python compute_metrics.py --input-dir ../../data/synthetic/pdm \
+                              --output-dir ../../artifacts/tables
+
+Author: SAM–STRIDE Replication Package
 """
+
+import argparse
+import os
+import sys
+from typing import Tuple, Optional
 
 import pandas as pd
-import numpy as np
-import os
-from datetime import datetime
 
 
-# ==========================================================
-# 路徑設定
-# ==========================================================
+# ---------------------------------------------------------------------------
+# Utility functions
+# ---------------------------------------------------------------------------
 
-BASE = "../../"   # relative to metrics/
-PD_PATH = BASE + "02_data/PdM_HVAC/processed/Performance_Data_300.csv"
-WORKFLOW_LOG = BASE + "04_validation/workflow_logs/sample_workflow_log.csv"
-COMP_LOG = BASE + "04_validation/workflow_logs/compensation_log.csv"
-
-RESULT_DIR = BASE + "04_validation/RESULTS/"
-os.makedirs(RESULT_DIR, exist_ok=True)
+def _log(msg: str):
+    """Lightweight logger."""
+    print(f"[compute_metrics] {msg}", file=sys.stderr)
 
 
-# ==========================================================
-# 輔助函式
-# ==========================================================
-
-def to_dt(x):
-    """轉換為 datetime，遇到錯誤回傳 NaT"""
-    try:
-        return pd.to_datetime(x)
-    except:
-        return pd.NaT
+def _ensure_dir(path: str):
+    """Create directory if it does not exist."""
+    os.makedirs(path, exist_ok=True)
 
 
-# ==========================================================
-# 載入資料
-# ==========================================================
-
-print("讀取 Performance Data...")
-pd_df = pd.read_csv(PD_PATH)
-
-print("讀取 workflow event log...")
-wf_df = pd.read_csv(WORKFLOW_LOG)
-
-print("讀取 compensation log...")
-comp_df = pd.read_csv(COMP_LOG)
-
-
-# ==========================================================
-# 1. TTA 計算
-# ==========================================================
-print("計算 TTA ...")
-
-wf_df["trigger_time"] = wf_df["trigger_time"].apply(to_dt)
-wf_df["action_start"] = wf_df["action_start"].apply(to_dt)
-
-wf_df["TTA_sec"] = (wf_df["action_start"] - wf_df["trigger_time"]).dt.total_seconds()
-
-tta_df = wf_df[["event_id", "trigger_time", "action_start", "TTA_sec"]]
-tta_df.to_csv(RESULT_DIR + "tta_log.csv", index=False)
+def _parse_timestamp(df: pd.DataFrame, cols) -> pd.DataFrame:
+    """
+    Safely parse timestamp columns if they exist.
+    `cols` can be a single column name or a list of names.
+    """
+    if isinstance(cols, str):
+        cols = [cols]
+    for c in cols:
+        if c in df.columns:
+            df[c] = pd.to_datetime(df[c], errors="coerce")
+        else:
+            _log(f"WARNING: timestamp column '{c}' not found.")
+    return df
 
 
-# ==========================================================
-# 2. Latency 計算（工作流自身延遲）
-# ==========================================================
-print("計算 Latency ...")
+# ---------------------------------------------------------------------------
+# 1. TTA (Time-To-Action)
+# ---------------------------------------------------------------------------
 
-wf_df["workflow_end"] = wf_df["workflow_end"].apply(to_dt)
-wf_df["latency_sec"] = (wf_df["workflow_end"] - wf_df["action_start"]).dt.total_seconds()
+def compute_tta(
+    wo_df: pd.DataFrame,
+    output_path: str,
+    trigger_col: str = "t_trigger",
+    action_start_col: str = "t_action_start",
+    mode_col: str = "mode",
+    id_col: str = "workorder_id",
+) -> pd.DataFrame:
+    """
+    Compute Time-To-Action per work order and export summary stats.
 
-latency_df = wf_df[["event_id", "action_start", "workflow_end", "latency_sec"]]
-latency_df.to_csv(RESULT_DIR + "latency_results.csv", index=False)
+    Expected columns in thesis_workorders.csv:
+        - t_trigger          : time when trigger was emitted
+        - t_action_start     : time when action execution started
+        - mode               : "baseline" or "sam"
+        - workorder_id       : unique ID per work order
+
+    Output table (tta.csv) columns:
+        - mode
+        - count
+        - tta_mean_seconds
+        - tta_median_seconds
+        - tta_p90_seconds
+        - tta_p95_seconds
+    """
+    # Check required columns
+    required = [trigger_col, action_start_col]
+    for c in required:
+        if c not in wo_df.columns:
+            _log(f"WARNING: Cannot compute TTA, missing column '{c}'.")
+            return pd.DataFrame()
+
+    # Parse timestamps
+    wo_df = _parse_timestamp(wo_df, [trigger_col, action_start_col])
+
+    # Compute TTA in seconds
+    wo_df["TTA_seconds"] = (
+        (wo_df[action_start_col] - wo_df[trigger_col])
+        .dt.total_seconds()
+        .astype("float")
+    )
+
+    # Drop rows with invalid/NaT
+    before = len(wo_df)
+    wo_df = wo_df.dropna(subset=["TTA_seconds"])
+    _log(f"TTA: dropped {before - len(wo_df)} rows with invalid timestamps.")
+
+    if mode_col not in wo_df.columns:
+        _log(f"WARNING: mode column '{mode_col}' not found. "
+             f"Using single group 'all'.")
+        wo_df[mode_col] = "all"
+
+    # Aggregate by mode
+    def _p(series, q):
+        return series.quantile(q) if not series.empty else None
+
+    grouped = wo_df.groupby(mode_col)["TTA_seconds"]
+    tta_summary = grouped.agg(
+        count="count",
+        tta_mean_seconds="mean",
+        tta_median_seconds="median"
+    ).reset_index()
+
+    # add P90 and P95
+    p90_list = []
+    p95_list = []
+    for mode, grp in wo_df.groupby(mode_col):
+        p90_list.append((mode, _p(grp["TTA_seconds"], 0.90)))
+        p95_list.append((mode, _p(grp["TTA_seconds"], 0.95)))
+
+    p90_df = pd.DataFrame(p90_list, columns=[mode_col, "tta_p90_seconds"])
+    p95_df = pd.DataFrame(p95_list, columns=[mode_col, "tta_p95_seconds"])
+
+    tta_summary = (
+        tta_summary.merge(p90_df, on=mode_col, how="left")
+        .merge(p95_df, on=mode_col, how="left")
+    )
+
+    tta_summary.to_csv(output_path, index=False)
+    _log(f"[TTA] Written summary to {output_path}")
+
+    return tta_summary
 
 
-# ==========================================================
-# 3. Throughput 計算（每秒事件數）
-# ==========================================================
-print("計算 Throughput ...")
+# ---------------------------------------------------------------------------
+# 2. Latency breakdown (L1–L4)
+# ---------------------------------------------------------------------------
 
-if len(wf_df) > 1:
-    duration = (wf_df["trigger_time"].max() - wf_df["trigger_time"].min()).total_seconds()
-    throughput = len(wf_df) / duration if duration > 0 else np.nan
-else:
-    throughput = np.nan
+def compute_latency_breakdown(
+    wo_df: pd.DataFrame,
+    output_path: str,
+    trigger_col: str = "t_trigger",
+    detect_col: str = "t_detected",
+    task_created_col: str = "t_task_created",
+    action_start_col: str = "t_action_start",
+    action_end_col: str = "t_action_end",
+    mode_col: str = "mode",
+) -> pd.DataFrame:
+    """
+    Compute latency decomposition into L1–L4.
 
-# ==========================================================
-# 4. Loss Rate = (事件輸入 - 成功處理) / 輸入
-# ==========================================================
-print("計算 Loss Rate ...")
+    Interpretation (you can adapt to your exact thesis definition):
+        - L1: Detection latency  = t_detected    - t_trigger
+        - L2: Reasoning latency  = t_task_created - t_detected
+        - L3: Dispatch latency   = t_action_start - t_task_created
+        - L4: Execution latency  = t_action_end   - t_action_start
 
-input_events = pd_df["event_id"].nunique()
-processed_events = wf_df["event_id"].nunique()
+    Output table (latency.csv) columns:
+        - mode
+        - metric         (L1 / L2 / L3 / L4)
+        - mean_seconds
+        - median_seconds
+        - p90_seconds
+    """
+    cols = [trigger_col, detect_col, task_created_col, action_start_col, action_end_col]
+    missing = [c for c in cols if c not in wo_df.columns]
+    if missing:
+        _log("WARNING: Cannot compute latency breakdown. "
+             f"Missing columns: {missing}")
+        return pd.DataFrame()
 
-loss_rate = (input_events - processed_events) / input_events if input_events > 0 else np.nan
+    wo_df = _parse_timestamp(wo_df, cols)
+
+    # Compute each latency in seconds
+    wo_df["L1_seconds"] = (
+        wo_df[detect_col] - wo_df[trigger_col]
+    ).dt.total_seconds()
+    wo_df["L2_seconds"] = (
+        wo_df[task_created_col] - wo_df[detect_col]
+    ).dt.total_seconds()
+    wo_df["L3_seconds"] = (
+        wo_df[action_start_col] - wo_df[task_created_col]
+    ).dt.total_seconds()
+    wo_df["L4_seconds"] = (
+        wo_df[action_end_col] - wo_df[action_start_col]
+    ).dt.total_seconds()
+
+    # Drop rows with NaN in any latency
+    latency_cols = ["L1_seconds", "L2_seconds", "L3_seconds", "L4_seconds"]
+    before = len(wo_df)
+    wo_df = wo_df.dropna(subset=latency_cols)
+    _log(f"Latency: dropped {before - len(wo_df)} rows with invalid timestamps.")
+
+    if mode_col not in wo_df.columns:
+        _log(f"WARNING: mode column '{mode_col}' not found. "
+             f"Using single group 'all'.")
+        wo_df[mode_col] = "all"
+
+    # Melt into long format: one row per latency type
+    long_df = wo_df.melt(
+        id_vars=[mode_col],
+        value_vars=latency_cols,
+        var_name="metric",
+        value_name="seconds",
+    )
+
+    # Map metric names to L1–L4
+    metric_map = {
+        "L1_seconds": "L1_detection",
+        "L2_seconds": "L2_reasoning",
+        "L3_seconds": "L3_dispatch",
+        "L4_seconds": "L4_execution",
+    }
+    long_df["metric"] = long_df["metric"].map(metric_map)
+
+    def _p(series, q):
+        return series.quantile(q) if not series.empty else None
+
+    grouped = long_df.groupby([mode_col, "metric"])["seconds"]
+    latency_summary = grouped.agg(
+        mean_seconds="mean",
+        median_seconds="median"
+    ).reset_index()
+
+    # add P90
+    extra = []
+    for (mode, metric), grp in long_df.groupby([mode_col, "metric"]):
+        extra.append((mode, metric, _p(grp["seconds"], 0.90)))
+    extra_df = pd.DataFrame(extra, columns=[mode_col, "metric", "p90_seconds"])
+
+    latency_summary = latency_summary.merge(
+        extra_df, on=[mode_col, "metric"], how="left"
+    )
+
+    latency_summary.to_csv(output_path, index=False)
+    _log(f"[Latency] Written summary to {output_path}")
+
+    return latency_summary
 
 
-# ==========================================================
-# 5. 補償命中率（Compensation Hit Rate）
-# ==========================================================
-print("計算補償命中率 ...")
+# ---------------------------------------------------------------------------
+# 3. Compensation funnel (例外 → 補償 → 恢復)
+# ---------------------------------------------------------------------------
 
-if len(comp_df) > 0:
-    comp_df["is_correct"] = comp_df["expected"] == comp_df["actual"]
-    compensation_rate = comp_df["is_correct"].mean()
-else:
-    compensation_rate = np.nan
+def compute_compensation_funnel(
+    wo_df: pd.DataFrame,
+    output_path: str,
+    status_col: str = "status",
+    mode_col: str = "mode",
+    exception_status: str = "EXCEPTION",
+    compensated_status: str = "COMPENSATED",
+    recovered_status: str = "RECOVERED",
+) -> pd.DataFrame:
+    """
+    Compute compensation funnel statistics.
 
+    Expected columns:
+        - status : lifecycle status of the workorder
+                   (e.g., EXCEPTION / COMPENSATED / RECOVERED / CLOSED)
+        - mode   : baseline / sam
 
-# ==========================================================
-# 6. 可移植性（Portability）— 以成功執行的場景數表示
-# ==========================================================
-portability_score = 1  # 基於你的設定：PdM + SID-CM 均可重用 → 設為 1
+    Output table (funnels.csv) columns:
+        - mode
+        - stage           ("exception", "compensated", "recovered")
+        - count
+        - rate_from_prev  (relative rate from previous stage)
+    """
+    if status_col not in wo_df.columns:
+        _log(f"WARNING: Cannot compute funnels, missing status column '{status_col}'.")
+        return pd.DataFrame()
 
+    if mode_col not in wo_df.columns:
+        _log(f"WARNING: mode column '{mode_col}' not found. Using 'all'.")
+        wo_df[mode_col] = "all"
 
-# ==========================================================
-# 輸出 summary
-# ==========================================================
-print("輸出 summary_statistics.md ...")
+    stages = [
+        ("exception", exception_status),
+        ("compensated", compensated_status),
+        ("recovered", recovered_status),
+    ]
 
-summary = f"""
-# 效能指標統計摘要（compute_metrics.py 自動產生）
+    rows = []
+    for mode, grp in wo_df.groupby(mode_col):
+        counts = {}
+        for stage_name, status_value in stages:
+            counts[stage_name] = (grp[status_col] == status_value).sum()
 
-## 1. 事件至行動延遲（TTA）
-- 平均 TTA：{tta_df["TTA_sec"].mean():.4f} 秒
-- 中位數：{tta_df["TTA_sec"].median():.4f} 秒
-- 標準差：{tta_df["TTA_sec"].std():.4f} 秒
+        # compute funnel rates
+        # exception is base
+        base = counts["exception"]
+        comp = counts["compensated"]
+        recv = counts["recovered"]
 
----
+        rows.append(
+            {
+                "mode": mode,
+                "stage": "exception",
+                "count": base,
+                "rate_from_prev": 1.0 if base > 0 else None,
+            }
+        )
+        rows.append(
+            {
+                "mode": mode,
+                "stage": "compensated",
+                "count": comp,
+                "rate_from_prev": comp / base if base > 0 else None,
+            }
+        )
+        rows.append(
+            {
+                "mode": mode,
+                "stage": "recovered",
+                "count": recv,
+                "rate_from_prev": recv / comp if comp > 0 else None,
+            }
+        )
 
-## 2. Latency（工作流延遲）
-- 平均 latency：{latency_df["latency_sec"].mean():.4f} 秒
-- 中位數：{latency_df["latency_sec"].median():.4f} 秒
-
----
-
-## 3. Throughput（吞吐量）
-- 事件吞吐量：{throughput:.4f} events/sec
-
----
-
-## 4. Loss Rate（遺失率）
-- 輸入事件數：{input_events}
-- 成功處理事件數：{processed_events}
-- 遺失率：{loss_rate:.4f}
-
----
-
-## 5. 補償命中率（Compensation Hit Rate）
-- 補償命中率：{compensation_rate:.4f}
-
----
-
-## 6. 可移植性（Portability）
-- 跨案例成功重部署數：{portability_score}
-
-"""
-
-with open(RESULT_DIR + "summary_statistics.md", "w", encoding="utf-8") as f:
-    f.write(summary)
-
-print("🎉 compute_metrics.py 完成！")
-print("結果已輸出至 04_validation/RESULTS/")
-
+    funnel_df = pd.DataFrame(rows)
+    funnel_df.to_csv(output_path, index=_
