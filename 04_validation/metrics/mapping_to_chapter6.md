@@ -21,9 +21,7 @@
 
 ## **2.1 TTA（行動啟動時間）**
 - **定義：**  
-  \[
-  \mathrm{TTA} = t_{\text{action\_start}} - t_{\text{trigger}}
-  \]
+  <img src="../formulas/TTA_formula.png" width="220"/>
 
 - **原始資料來源：**  
   `02_data/synthetic/pdm/thesis_workorders.csv`
