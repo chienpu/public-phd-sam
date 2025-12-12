@@ -1,30 +1,33 @@
-# PdM_HVAC/actors — 維運角色（Actors）
+# PdM_HVAC / actors — 維運角色名冊
 
-本資料夾包含 PdM 案例中所有可接受任務之角色（Actor）。  
-對應到 TIAA 中的「A（Actor）」語意角色，用於建立語意行動鏈。
+此資料夾包含：
 
----
+- Actors.csv（手動或自動產生）
 
-## 📄 Actors.csv
-
-### 欄位定義
-
-| 欄位 | 說明 |
-|------|------|
-| `actor_id` | Actor 節點主鍵（Technician_01） |
-| `name` | 顯示名稱 |
-| `role` | Technician / Supervisor / AI-Agent |
-| `team` | 維運小組／部門 |
-
-### 典型示例
-
-| actor_id | role | team |
-|----------|------|------|
-| Technician_01 | Technician | HVAC_Team |
-| Technician_02 | Technician | HVAC_Team |
-| Supervisor_01 | Supervisor | FM_Office |
-| AI_Agent_01 | AI-Agent | AI_Service |
+Actor 在 TIAA 與 STRIDE 中扮演 **行動執行者** 的角色。
 
 ---
 
-所有 Actor 將在匯入 Neo4j 後參與工單分派，並作為語意責任鏈（Provenance Chain）的一部分。
+## CSV 欄位
+
+| actor_id | name | role | team |
+|----------|------|------|------|
+| Tech01 | Technician_01 | Technician | HVAC_Team |
+| Tech02 | Technician_02 | Technician | HVAC_Team |
+| Sup01 | Supervisor_01 | Supervisor | FM_Office |
+| AIA01 | AI_Agent_01 | AI-Agent | AI_Service |
+
+---
+
+## 語意圖譜對應
+
+```cypher
+(:MaintenanceTask)-[:ASSIGNED_TO]->(:Actor)
+```
+
+---
+
+## 📌 小結
+
+actors/ 資料夾提供 STRIDE 中 Action 的執行者資訊，  
+對應 TIAA 的「Actor」語意區塊。
