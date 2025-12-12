@@ -1,0 +1,6 @@
+actor_id,name,role,team
+Tech01,Technician_01,Technician,HVAC_Team
+Tech02,Technician_02,Technician,HVAC_Team
+Sup01,Supervisor_01,Supervisor,FM_Office
+PM01,ProjectManager_01,ProjectManager,FM_Office
+AIA01,AI_Agent_01,AI-Agent,AI_Service
