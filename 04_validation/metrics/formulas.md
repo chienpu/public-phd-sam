@@ -9,7 +9,8 @@ compute_metrics.py 自動計算。
 事件觸發到系統開始採取行動（如建立工單、啟動工作流）所需的時間差。
 
 ### 📌 定義（含 inline 公式圖片）
-<img src="../formulas/TTA_formula.png"/>
+
+<img src="../formulas/TTA_formula.png" width="220"/>
 
 ### 📌 量測方式
 
@@ -29,7 +30,7 @@ compute_metrics.py 自動計算。
 
 ### 📌 公式
 
-<img src="../04_validation/formulas/Latency_formula.png" width="220"/>
+<img src="../formulas/Latency_formula.png" width="220"/>
 
 ### 📌 量測方式
 
@@ -43,7 +44,7 @@ compute_metrics.py 自動計算。
 
 ### 📌 公式
 
-<img src="../04_validation/formulas/Throughput_formula.png" width="220"/>
+<img src="../formulas/Throughput_formula.png" width="220"/>
 
 ### 📌 量測方式
 
@@ -59,7 +60,7 @@ compute_metrics.py 自動計算。
 
 ### 📌 公式
 
-<img src="../04_validation/formulas/Loss_formula.png" width="220"/>
+<img src="../formulas/Loss_formula.png" width="220"/>
 
 ### 📌 量測方式
 
@@ -74,7 +75,7 @@ compute_metrics.py 自動計算。
 
 ### 📌 公式
 
-<img src="../04_validation/formulas/Compensation_formula.png" width="220"/>
+<img src="../formulas/Compensation_formula.png" width="220"/>
 
 ### 📌 量測方式
 
@@ -88,7 +89,7 @@ compute_metrics.py 自動計算。
 
 ### 📌 公式
 
-<img src="../04_validation/formulas/Portability_formula.png" width="220"/>
+<img src="../formulas/Portability_formula.png" width="220"/>
 
 ### 📌 量測方式
 
