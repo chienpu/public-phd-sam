@@ -9,9 +9,7 @@ compute_metrics.py 自動計算。
 事件觸發到系統開始採取行動（如建立工單、啟動工作流）所需的時間差。
 
 ### 📌 定義（含 inline 公式圖片）
-
-<img src="../formulas/TTA_formula.png" width="220"/>
-
+<img src="../formulas/TTA_formula.png" width="250"/>
 ### 📌 量測方式
 
  - trigger_emit 來自 Sensor / PerformanceData / Anomaly 之 Timestamp
