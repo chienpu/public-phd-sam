@@ -4,6 +4,12 @@
 所有指標皆對應論文第 **5 章（框架評估）**與第 6 章（案例驗證），並由
 compute_metrics.py 自動計算。
 
+### 📌 論文對應
+
+ - 第 5.3 節：事件驅動效能
+ - 第 6.1 節：HVAC PdM 自動工單派發
+ - Appendix B：指標定義
+
 ## 🧩 1. 事件至行動延遲（TTA, Time-to-Action）
 
 事件觸發到系統開始採取行動（如建立工單、啟動工作流）所需的時間差。
@@ -17,12 +23,6 @@ compute_metrics.py 自動計算。
  - trigger_emit 來自 Sensor / PerformanceData / Anomaly 之 Timestamp
  - action_start 來自 Power Automate / n8n workflow log
  - compute_metrics.py 會自動比對同一 event_id 的兩者時間戳
-
-### 📌 論文對應
-
- - 第 5.3 節：事件驅動效能
- - 第 6.1 節：HVAC PdM 自動工單派發
- - Appendix B：指標定義
 
 ## ⚡ 2. 延遲（Latency）— 系統處理一個事件所需時間
 
@@ -110,6 +110,7 @@ compute_metrics.py 自動計算。
 | Compensation Hit Rate | 補償流程成功比例  | compensation_log   |
 | Portability           | 跨場域成功率    | PdM & SIDCM        |
 
+
 ## 📘 引用文獻（中文摘要）
 
 本文件所有指標之定義參考以下領域文獻：
@@ -119,6 +120,7 @@ compute_metrics.py 自動計算。
  - PROV-O 資訊來歷模型
  - ISO 19650 資訊治理夾構
  - BS EN 15978 生命週期碳評估標準
+
 
 ## 📎 與 STRIDE/SAM 模組的對位
 
