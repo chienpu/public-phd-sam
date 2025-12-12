@@ -12,7 +12,7 @@
 本資料夾包含：
 
 - MaintenanceTasks_Generated.csv（依異常自動生成）
--（若需要）CompensationTasks.csv（補償流程）
+- CompensationTasks.csv（補償流程）
 
 工單由異常事件（Anomaly）觸發，符合本研究的 TIAA 模型：  
 Trigger → Issue → Action → Actor
