@@ -1,0 +1,4 @@
+GlobalId,LastUpdatedDate,TypeOfBC,Name,Location,Floor,Sponsor
+IFC-300001,2020-02-01T00:00:00,HVAC,Cooling Unit 1,ZoneA,1,HVAC Pro
+IFC-300002,2020-02-01T00:00:00,HVAC,Cooling Unit 2,ZoneB,1,HVAC Pro
+IFC-300003,2020-02-01T00:00:00,HVAC,Cooling Unit 3,ZoneC,1,HVAC Pro
