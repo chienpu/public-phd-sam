@@ -13,6 +13,7 @@
 
 ## 📁 資料夾結構
 
+```text
 PdM_HVAC/
 ├─ raw/ ← 原始資料（Sensor + BuildingComponent）
 ├─ processed/ ← 清洗後之 Performance + Anomaly
@@ -20,6 +21,7 @@ PdM_HVAC/
 ├─ tasks/ ← 自動生成的維修工單
 ├─ actors/ ← 維運角色名冊
 └─ README_PdM_overview.md ← 本檔案
+```
 
 ---
 
