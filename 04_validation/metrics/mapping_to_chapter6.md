@@ -43,10 +43,11 @@
 
 | 階段 | 公式 | 說明 |
 |------|------|------|
-| **L1：偵測延遲** | \( t_{\text{detected}} - t_{\text{trigger}} \) | IoT 事件 → 系統偵測 |
-| **L2：語意推理延遲** | \( t_{\text{task\_created}} - t_{\text{detected}} \) | Traversal / TIAA 推理時間 |
-| **L3：派發延遲** | \( t_{\text{action\_start}} - t_{\text{task\_created}} \) | Workflow / API 任務派發 |
-| **L4：執行延遲** | \( t_{\text{action\_end}} - t_{\text{action\_start}} \) | 實際行動執行 |
+| **L1：偵測延遲** | detected_time - trigger_time | IoT 事件 → 系統偵測 |
+| **L2：語意推理延遲** | task_created_time - detected_time | Traversal / TIAA 推理時間 |
+| **L3：派發延遲** | action_start_time - task_created_time | Workflow / API 任務派發 |
+| **L4：執行延遲** | action_end_time - action_start_time | 實際行動執行 |
+
 
 - **輸入資料：**  
   `thesis_workorders.csv`
