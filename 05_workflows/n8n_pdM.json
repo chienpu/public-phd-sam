@@ -1,0 +1,21 @@
+{
+  "name": "PdM_Workflow_Mock",
+  "nodes": [
+    {
+      "type": "webhook",
+      "name": "Receive Task"
+    },
+    {
+      "type": "function",
+      "name": "Map Payload"
+    },
+    {
+      "type": "if",
+      "name": "Check Condition"
+    },
+    {
+      "type": "respond",
+      "name": "Return Status"
+    }
+  ]
+}
