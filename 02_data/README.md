@@ -40,12 +40,13 @@
 ├─ Carbon_SIDCM/
 │   ├─ raw/
 │   │   ├─ Carbon_Material_Factors_demo.csv
-│   │   ├─ Carbon_Component_BoQ_demo.csv
-│   │   ├─ Carbon_Energy_Use_demo.csv
+│   │   ├─ Carbon_Component_BoQ_demo.csv      ← 由 全校館舍 + BuildingList
+│   │   ├─ Carbon_Energy_Use_demo.csv         ← 由 ElectricityConsumption_Table
+│   │   ├─ Carbon_Operational_Record_demo.csv ← 由 RecordList
 │   │   └─ README_Carbon_raw.md
 │   ├─ processed/
-│   │   ├─ SIDCM_Graph_Nodes_demo.csv
-│   │   ├─ SIDCM_Graph_Relationships_demo.csv
+│   │   ├─ SIDCM_Graph_Nodes_demo.csv           ← EnergyFlow / EmissionRecord
+│   │   ├─ SIDCM_Graph_Relationships_demo.csv   ← GENERATES / DERIVED_FROM
 │   │   └─ README_Carbon_processed.md
 │   └─ README_Carbon_overview.md
 │

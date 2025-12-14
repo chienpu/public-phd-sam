@@ -1,0 +1,3 @@
+scenario,mode,effort_unit,effort
+Carbon_SIDCM,baseline,setup_steps,25
+Carbon_SIDCM,sidcm,setup_steps,8
