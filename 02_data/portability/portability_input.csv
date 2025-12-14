@@ -1,0 +1,5 @@
+scenario,mode,effort,unit
+PdM_HVAC,baseline,18,setup_steps
+PdM_HVAC,sam,6,setup_steps
+Carbon_SIDCM,baseline,14,setup_steps
+Carbon_SIDCM,sam,5,setup_steps
