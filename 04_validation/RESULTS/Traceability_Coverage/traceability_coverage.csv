@@ -1,0 +1,3 @@
+framework,total_tasks,traceable_tasks,coverage_ratio
+Baseline,320,145,0.453125
+SAM,320,314,0.98125

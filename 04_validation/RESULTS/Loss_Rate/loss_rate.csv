@@ -1,0 +1,3 @@
+framework,events_detected,actions_executed,lost_events,loss_rate
+Baseline,300,180,120,0.4
+SAM,300,270,30,0.1
