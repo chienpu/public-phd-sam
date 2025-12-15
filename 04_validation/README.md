@@ -68,8 +68,12 @@
 │  │  ├─ traceability_coverage.csv
 │  │  └─ README.md
 │  │
-│  └─ Compensation_Funnel/
-│     ├─ compensation_funnel.csv
+│  ├─ Compensation_Funnel/
+│  │  ├─ compensation_funnel.csv
+│  │  └─ README.md
+│  │
+│  └─ Loss_Rate/
+│     ├─ loss_rate.csv
 │     └─ README.md
 │
 └─ README.md   ←（本檔案）
