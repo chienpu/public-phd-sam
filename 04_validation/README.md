@@ -46,11 +46,31 @@
 │   └─ compensation_log.csv
 │
 ├─ RESULTS/
-│   ├─ tta_log.csv
-│   ├─ latency_results.csv
-│   ├─ traceability_report.md
-│   ├─ compensation_rate.csv
-│   └─ summary_statistics.md
+│  ├─ TTA/
+│  │  ├─ tta_distribution_pdm_baseline_vs_sam.csv
+│  │  ├─ tta_summary_stats.csv
+│  │  └─ README.md
+│  │
+│  ├─ Latency_Decomposition_L1_L4/
+│  │  ├─ latency_l1_l4_raw.csv
+│  │  ├─ latency_l1_l4_summary.csv
+│  │  └─ README.md
+│  │
+│  ├─ Provenance_Replay/
+│  │  ├─ provenance_replay_latency.csv
+│  │  └─ README.md
+│  │
+│  ├─ Portability_Setup_Effort/
+│  │  ├─ portability_setup_effort.csv
+│  │  └─ README.md
+│  │
+│  ├─ Traceability_Coverage/
+│  │  ├─ traceability_coverage.csv
+│  │  └─ README.md
+│  │
+│  └─ Compensation_Funnel/
+│     ├─ compensation_funnel.csv
+│     └─ README.md
 │
 └─ README.md   ←（本檔案）
 
