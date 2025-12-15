@@ -1,125 +1,124 @@
-# Evaluation Results (RESULTS)
+# 評估結果資料集（RESULTS）
 
-This directory contains all evaluation datasets used to validate the proposed
-Semantic Action Management (SAM) framework and its STRIDE-based implementation.
-The datasets correspond directly to the quantitative metrics reported in
-Chapter 6 of the dissertation and are organized by metric type to ensure
-clarity, traceability, and reproducibility.
+本資料夾彙整所有用於驗證本研究所提出之「語意行動管理（Semantic Action Management, SAM）」
+方法論與 STRIDE 架構實作之**量化評估資料集**。
+所有資料集皆直接對應博士論文第六章之評估指標，
+並依指標類型分類，以確保分析流程的清晰性、可追溯性與可重現性。
 
-All datasets in this directory represent **evaluation artifacts** derived
-from system execution, controlled simulations, or structured measurements.
-They are not raw input data. Raw or semi-processed input data can be found
-under `02_data/`.
-
----
-
-## Directory Structure and Correspondence to Chapter 6
-
-### 1. Trigger-to-Action Latency (TTA)
-**Path:** `RESULTS/TTA/`
-
-This folder contains datasets measuring the end-to-end latency from event
-detection to action initiation in predictive maintenance (PdM) scenarios.
-
-- Event-level latency distributions for baseline (polling-based) and
-  SAM (event-driven) pipelines
-- Aggregated statistics used for comparative analysis
-
-**Corresponding sections:**  
-Chapter 6 – Event-to-Action Responsiveness Evaluation
+本資料夾內之所有資料皆屬於**評估結果（evaluation artifacts）**，
+係由系統實際執行、控制式模擬或結構化量測所產生，
+並非原始輸入資料。
+原始或半處理輸入資料請參見 `02_data/`。
 
 ---
 
-### 2. Latency Decomposition (L1–L4)
-**Path:** `RESULTS/Latency_Decomposition_L1_L4/`
+## 資料夾結構與論文第六章對應關係
 
-These datasets decompose total decision latency into four semantic stages:
-detection, reasoning, dispatch, and execution (L1–L4), enabling fine-grained
-analysis of where performance gains are achieved.
+### 1. 事件至行動延遲（Trigger-to-Action Latency, TTA）
+**路徑：** `RESULTS/TTA/`
 
-**Corresponding sections:**  
-Chapter 6 – Latency Decomposition and Pipeline Analysis
+本資料夾包含用於衡量事件由觸發至行動啟動之端到端延遲資料，
+用以比較 polling-based baseline 與事件驅動之 SAM 管線在預測性維護（PdM）情境下的反應效能。
 
----
+內容包含：
+- 事件層級之延遲分佈資料（用於箱型圖／小提琴圖）
+- 延遲統計摘要（平均值、中位數、變異量等）
 
-### 3. Provenance Replay Latency
-**Path:** `RESULTS/Provenance_Replay/`
-
-This dataset evaluates the time required to replay and reconstruct past
-decisions using provenance information, reflecting auditability and
-explainability of the decision pipeline.
-
-**Corresponding sections:**  
-Chapter 6 – Provenance-Based Explainability and Replay
+**對應章節：**  
+第六章－事件至行動即時性評估
 
 ---
 
-### 4. Portability and Setup Effort
-**Path:** `RESULTS/Portability_Setup_Effort/`
+### 2. 延遲分解分析（L1–L4）
+**路徑：** `RESULTS/Latency_Decomposition_L1_L4/`
 
-This dataset compares the setup complexity and deployment effort required
-to instantiate decision pipelines across systems, reflecting portability
-and configuration overhead.
+本資料夾將整體決策延遲分解為四個語意階段（L1–L4），
+分別對應事件偵測、語意推理、任務派發與行動執行，
+用以分析效能改善主要來源。
 
-**Corresponding sections:**  
-Chapter 6 – System Portability and Deployment Effort
-
----
-
-### 5. Traceability Coverage
-**Path:** `RESULTS/Traceability_Coverage/`
-
-This dataset reports the proportion of system actions that can be fully
-traced back to triggering events, semantic reasoning steps, and executed
-actions, reflecting governance completeness.
-
-**Corresponding sections:**  
-Chapter 6 – Traceability and Governance Coverage
+**對應章節：**  
+第六章－語意決策管線延遲分解分析
 
 ---
 
-### 6. Compensation Funnel
-**Path:** `RESULTS/Compensation_Funnel/`
+### 3. 語意歷程重播延遲（Provenance Replay Latency）
+**路徑：** `RESULTS/Provenance_Replay/`
 
-This dataset captures the multi-stage progression from detected anomalies
-to compensable tasks and successful recovery actions, reflecting operational
-resilience and closure efficiency.
+本資料集用以評估系統在具備 provenance 記錄下，
+重建與重播歷史決策流程所需之時間，
+反映系統在可解釋性與稽核能力上的效能。
 
-**Corresponding sections:**  
-Chapter 6 – Compensation and Operational Recovery
-
----
-
-### 7. Loss Rate
-**Path:** `RESULTS/Loss_Rate/`
-
-This dataset quantifies the proportion of detected events that fail to
-materialize into executable actions, capturing decision robustness and
-pipeline reliability beyond latency-based metrics.
-
-**Corresponding sections:**  
-Chapter 6 – Loss Rate and Decision Robustness
+**對應章節：**  
+第六章－基於歷程紀錄之可解釋性分析
 
 ---
 
-## Methodological Note
+### 4. 系統可移植性與部署成本（Portability and Setup Effort）
+**路徑：** `RESULTS/Portability_Setup_Effort/`
 
-All evaluation datasets were generated following the same execution logic,
-event frequency, and orchestration structure as implemented in the STRIDE
-testbed. Where controlled or synthetic data were used, generation strictly
-followed the operational behavior of the deployed system to ensure
-methodological consistency and reproducibility.
+本資料集比較不同架構在部署與設定階段所需之步驟數與時間成本，
+用以評估系統在跨場域應用時的可移植性與導入負擔。
 
-For details on system execution and workflow orchestration, please refer to:
+**對應章節：**  
+第六章－系統可移植性與部署成本評估
+
+---
+
+### 5. 可追溯性覆蓋率（Traceability Coverage）
+**路徑：** `RESULTS/Traceability_Coverage/`
+
+本資料集量化系統中可被完整追溯之任務比例，
+包含事件來源、語意推理過程與行動執行結果，
+用以反映系統治理完整性與資訊一致性。
+
+**對應章節：**  
+第六章－可追溯性與治理覆蓋率分析
+
+---
+
+### 6. 補償閉環效率（Compensation Funnel）
+**路徑：** `RESULTS/Compensation_Funnel/`
+
+本資料集描述異常事件由偵測、轉換為可補償任務，
+至最終完成復原行動之多階段流程，
+用以評估系統在操作韌性與閉環效率上的表現。
+
+**對應章節：**  
+第六章－補償流程與操作韌性評估
+
+---
+
+### 7. 事件遺失率（Loss Rate）
+**路徑：** `RESULTS/Loss_Rate/`
+
+本資料集量化已偵測事件中，未能成功轉化為可執行行動之比例，
+用以衡量決策管線在實務運作下的穩健性與可靠度，
+並補足僅以延遲指標無法反映之治理缺口。
+
+**對應章節：**  
+第六章－事件遺失率與決策穩健性分析
+
+---
+
+## 方法說明（Methodological Note）
+
+本資料夾中所有評估資料皆依循 STRIDE 測試平台之實際執行邏輯、
+事件頻率與工作流編排方式產生。
+在採用控制式或合成資料之情況下，
+其生成方式仍嚴格對齊系統實際運作行為，
+以確保評估結果之方法一致性與可重現性。
+
+系統執行細節與工作流設計請參見：
 - `03_execution/`
 - `05_workflows/`
 
 ---
 
-## Usage
+## 使用說明
 
-These datasets are intended to be directly consumable by visualization and
-analysis tools such as Power BI, Excel, or Jupyter notebooks located under
-`04_validation/notebooks/`. Each dataset can be independently inspected,
-visualized, or re-analyzed to reproduce the figures and tables reported
-in the dissertation.
+本資料夾內之資料集可直接用於 Power BI、Excel
+或 `04_validation/notebooks/` 中之分析程式，
+以重現博士論文第六章所呈現之圖表與統計結果。
+各資料集皆可獨立檢視、分析與再利用，
+以支援研究透明化與後續延伸研究。
+
