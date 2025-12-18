@@ -1,0 +1,3 @@
+framework,time_window_min,completed_tasks,throughput_tasks_per_min
+Baseline,10,18,1.8
+SAM,10,102,10.2
