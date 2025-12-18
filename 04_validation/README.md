@@ -72,6 +72,12 @@
 │  │  ├─ compensation_funnel.csv
 │  │  └─ README.md
 │  │
+│  ├─ Effective_Throughput/
+│  │  ├── throughput_definition.md
+│  │  ├── throughput_pdm_summary.csv
+│  │  ├── throughput_chart.xlsx
+│  │  ├── README.md
+│  │
 │  └─ Loss_Rate/
 │     ├─ loss_rate.csv
 │     └─ README.md
