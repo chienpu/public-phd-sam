@@ -26,16 +26,14 @@ recovered tasks**, not merely triggered or dispatched tasks.
 
 Effective Throughput is defined as:
 
-\[
-\mathrm{Throughput}_{\mathrm{eff}} =
-\frac{N_{\mathrm{completed}}}{\Delta t}
-\]
+$$
+\mathrm{Throughput}_{\mathrm{eff}}=\frac{N_{\mathrm{completed}}}{\Delta t}
+$$
 
 where:
 
-- \( N_{\mathrm{completed}} \): Number of tasks that reach the
-  *Successfully Recovered* state
-- \( \Delta t \): Observation time window (in minutes)
+- $N_{\mathrm{completed}}$: Number of tasks that reach the *Successfully Recovered* state  
+- $\Delta t$: Observation time window (in minutes)
 
 This definition ensures that throughput reflects **end-to-end task success**, rather than
 intermediate execution events.
