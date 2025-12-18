@@ -1,0 +1,9 @@
+framework,layer,latency_ms
+Baseline,L1_Detection,35
+Baseline,L2_SemanticReasoning,420
+Baseline,L3_WorkflowDispatch,980
+Baseline,L4_ExecutionStart,610
+SAM,L1_Detection,30
+SAM,L2_SemanticReasoning,85
+SAM,L3_WorkflowDispatch,120
+SAM,L4_ExecutionStart,90

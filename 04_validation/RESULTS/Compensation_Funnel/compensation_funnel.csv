@@ -1,4 +1,9 @@
-stage,Baseline,SAM
-Detected Anomalies,300,300
-Compensable Tasks,180,260
-Successfully Recovered,92,238
+framework,stage,value
+Baseline,Failed Tasks,120
+Baseline,Compensation Triggered,35
+Baseline,Compensation Executed,30
+Baseline,Successfully Recovered Tasks,18
+SAM,Failed Tasks,120
+SAM,Compensation Triggered,110
+SAM,Compensation Executed,108
+SAM,Successfully Recovered Tasks,102
