@@ -88,39 +88,39 @@ n8n 版本特別適合本地測試與 reviewer 重現。
 ```mermaid
 flowchart LR
     %% === C1: Baseline Workflow ===
-    subgraph C1[🧱 C1: Baseline Workflow]
-        A1[Sensor / Data Source] --> B1[Scheduled Polling]
-        B1 --> C1n[Latest Value Snapshot]
-        C1n --> D1[Static Rule Check (if–then)]
-        D1 --> E1[Alert / Work Order Creation]
-        E1 --> F1[Human / CMMS Execution]
+    subgraph C1["🧱 C1: Baseline Workflow"]
+        A1["Sensor / Data Source"] --> B1["Scheduled Polling"]
+        B1 --> C1n["Latest Value Snapshot"]
+        C1n --> D1["Static Rule Check (if–then)"]
+        D1 --> E1["Alert / Work Order Creation"]
+        E1 --> F1["Human / CMMS Execution"]
 
         %% C1 Annotations
-        B1 -.-> G1[⏱ Time-gated detection (Polling interval)]
-        C1n -.-> H1[Decision Trace (Not captured)]
-        D1 -.-> I1[Hard-coded rules (Domain-specific logic)]
+        B1 -.-> G1["⏱ Time-gated detection (Polling interval)"]
+        C1n -.-> H1["Decision Trace (Not captured)"]
+        D1 -.-> I1["Hard-coded rules (Domain-specific logic)"]
     end
 
     %% === C2: SAM Workflow ===
-    subgraph C2[⚙️ C2: SAM Workflow]
-        A2[Event Emitted (Sensor / Data Change)] --> B2[Trigger Detection (EDA / Listener)]
-        B2 --> C2n[Semantic Transformation (Trigger → Issue)]
-        C2n --> D2[Graph Traversal Reasoning (Neo4j)]
-        D2 --> E2[Action Selection (SAU)]
-        E2 --> F2[Workflow Execution (Actor / Automation)]
-        F2 --> G2[Outcome]
-        G2 --> H2[Compensation SAU]
+    subgraph C2["⚙️ C2: SAM Workflow"]
+        A2["Event Emitted (Sensor / Data Change)"] --> B2["Trigger Detection (EDA / Listener)"]
+        B2 --> C2n["Semantic Transformation (Trigger → Issue)"]
+        C2n --> D2["Graph Traversal Reasoning (Neo4j)"]
+        D2 --> E2["Action Selection (SAU)"]
+        E2 --> F2["Workflow Execution (Actor / Automation)"]
+        F2 --> G2["Outcome"]
+        G2 --> H2["Compensation SAU"]
         H2 --> E2
 
         %% C2 Provenance & Layers
-        C2n --> I2[Provenance Graph (Queryable decision path)]
+        C2n --> I2["Provenance Graph (Queryable decision path)"]
         E2 --> I2
         G2 --> I2
-        J2[Ontology / Graph Schema (Stable across domains)] -.-> C2n
+        J2["Ontology / Graph Schema (Stable across domains)"] -.-> C2n
         J2 -.-> D2
-        K2[Configuration & Workflow Mapping (Context-specific)] --> B2
+        K2["Configuration & Workflow Mapping (Context-specific)"] --> B2
         K2 --> F2
-        B2 -.-> L2[⚡ Immediate event capture (No polling delay)]
+        B2 -.-> L2["⚡ Immediate event capture (No polling delay)"]
     end
 
     %% === Comparative Bridges ===
@@ -130,8 +130,8 @@ flowchart LR
     H1 ---|Resolved with| I2
     I1 ---|Abstracted by| J2
 
-    classDef baseline fill:#f5f5f5,stroke:#000,color:#000;
-    classDef sam fill:#e3f2fd,stroke:#1565c0,color:#000;
+    classDe
+
 
 
 ```
