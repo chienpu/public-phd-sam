@@ -86,19 +86,52 @@ n8n 版本特別適合本地測試與 reviewer 重現。
 > 註：實際連接之 CMMS / 工單系統端點與認證資訊不包含在本 repo 中，請依照你所在之組織環境進行設定。
 
 ```mermaid
-timeline
-    title Evolution from C1 → C3
-    section 🧱 C1: Baseline Stage
-      2015 : Rule-based monitoring — Static if–then logic, scheduled polling, manual work orders
-      2018 : Incremental automation — Basic alerting and manual CMMS integration
+flowchart LR
+    %% === C1: Baseline Workflow ===
+    subgraph C1[🧱 C1: Baseline Workflow]
+        A1[Sensor / Data Source] --> B1[Scheduled Polling]
+        B1 --> C1n[Latest Value Snapshot]
+        C1n --> D1[Static Rule Check (if–then)]
+        D1 --> E1[Alert / Work Order Creation]
+        E1 --> F1[Human / CMMS Execution]
 
-    section ⚙️ C2: Semantic Automation Stage
-      2022 : Event-driven reasoning — Immediate event capture, semantic transformation, graph-based context
-      2023 : Provenance & compensation — Traceable decision graphs, self-correcting SAU feedback loops
-      2024 : Cross-domain portability — Ontology and configuration-driven workflows
+        %% C1 Annotations
+        B1 -.-> G1[⏱ Time-gated detection (Polling interval)]
+        C1n -.-> H1[Decision Trace (Not captured)]
+        D1 -.-> I1[Hard-coded rules (Domain-specific logic)]
+    end
 
-    section 🤖 C3: Autonomous Stage
-      2025 : Self-adaptive orchestration — Multi-agent coordination, continuous learning from feedback
-      2027 : Full autonomy — Goal-oriented systems operating across domains without manual intervention
+    %% === C2: SAM Workflow ===
+    subgraph C2[⚙️ C2: SAM Workflow]
+        A2[Event Emitted (Sensor / Data Change)] --> B2[Trigger Detection (EDA / Listener)]
+        B2 --> C2n[Semantic Transformation (Trigger → Issue)]
+        C2n --> D2[Graph Traversal Reasoning (Neo4j)]
+        D2 --> E2[Action Selection (SAU)]
+        E2 --> F2[Workflow Execution (Actor / Automation)]
+        F2 --> G2[Outcome]
+        G2 --> H2[Compensation SAU]
+        H2 --> E2
+
+        %% C2 Provenance & Layers
+        C2n --> I2[Provenance Graph (Queryable decision path)]
+        E2 --> I2
+        G2 --> I2
+        J2[Ontology / Graph Schema (Stable across domains)] -.-> C2n
+        J2 -.-> D2
+        K2[Configuration & Workflow Mapping (Context-specific)] --> B2
+        K2 --> F2
+        B2 -.-> L2[⚡ Immediate event capture (No polling delay)]
+    end
+
+    %% === Comparative Bridges ===
+    B1 ---|Replaced by| B2
+    D1 ---|Enhanced via semantics| C2n
+    E1 ---|Automated by| E2
+    H1 ---|Resolved with| I2
+    I1 ---|Abstracted by| J2
+
+    classDef baseline fill:#f5f5f5,stroke:#000,color:#000;
+    classDef sam fill:#e3f2fd,stroke:#1565c0,color:#000;
+
 
 ```
