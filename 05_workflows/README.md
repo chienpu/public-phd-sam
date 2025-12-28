@@ -83,4 +83,22 @@ n8n 版本特別適合本地測試與 reviewer 重現。
 - `power_automate_flow.png`：展示完整 flow 節點配置  
 - `n8n_flow.png`：展示 PdM 案例之 n8n workflow 配置  
 
-> 註：實際連接之 CMMS / 工單系統端點與認證資訊不包含在本 repo 中，請依照你所在之組織環境進行設定。  
+> 註：實際連接之 CMMS / 工單系統端點與認證資訊不包含在本 repo 中，請依照你所在之組織環境進行設定。
+
+```mermaid
+timeline
+    title Evolution from C1 → C3
+    section 🧱 C1: Baseline Stage
+      2015 : Rule-based monitoring — Static if–then logic, scheduled polling, manual work orders
+      2018 : Incremental automation — Basic alerting and manual CMMS integration
+
+    section ⚙️ C2: Semantic Automation Stage
+      2022 : Event-driven reasoning — Immediate event capture, semantic transformation, graph-based context
+      2023 : Provenance & compensation — Traceable decision graphs, self-correcting SAU feedback loops
+      2024 : Cross-domain portability — Ontology and configuration-driven workflows
+
+    section 🤖 C3: Autonomous Stage
+      2025 : Self-adaptive orchestration — Multi-agent coordination, continuous learning from feedback
+      2027 : Full autonomy — Goal-oriented systems operating across domains without manual intervention
+
+```
