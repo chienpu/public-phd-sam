@@ -83,4 +83,55 @@ n8n 版本特別適合本地測試與 reviewer 重現。
 - `power_automate_flow.png`：展示完整 flow 節點配置  
 - `n8n_flow.png`：展示 PdM 案例之 n8n workflow 配置  
 
-> 註：實際連接之 CMMS / 工單系統端點與認證資訊不包含在本 repo 中，請依照你所在之組織環境進行設定。  
+> 註：實際連接之 CMMS / 工單系統端點與認證資訊不包含在本 repo 中，請依照你所在之組織環境進行設定。
+
+```mermaid
+flowchart LR
+    %% === C1: Baseline Workflow ===
+    subgraph C1["🧱 C1: Baseline Workflow"]
+        A1["Sensor / Data Source"] --> B1["Scheduled Polling"]
+        B1 --> C1n["Latest Value Snapshot"]
+        C1n --> D1["Static Rule Check (if–then)"]
+        D1 --> E1["Alert / Work Order Creation"]
+        E1 --> F1["Human / CMMS Execution"]
+
+        %% C1 Annotations
+        B1 -.-> G1["⏱ Time-gated detection (Polling interval)"]
+        C1n -.-> H1["Decision Trace (Not captured)"]
+        D1 -.-> I1["Hard-coded rules (Domain-specific logic)"]
+    end
+
+    %% === C2: SAM Workflow ===
+    subgraph C2["⚙️ C2: SAM Workflow"]
+        A2["Event Emitted (Sensor / Data Change)"] --> B2["Trigger Detection (EDA / Listener)"]
+        B2 --> C2n["Semantic Transformation (Trigger → Issue)"]
+        C2n --> D2["Graph Traversal Reasoning (Neo4j)"]
+        D2 --> E2["Action Selection (SAU)"]
+        E2 --> F2["Workflow Execution (Actor / Automation)"]
+        F2 --> G2["Outcome"]
+        G2 --> H2["Compensation SAU"]
+        H2 --> E2
+
+        %% C2 Provenance & Layers
+        C2n --> I2["Provenance Graph (Queryable decision path)"]
+        E2 --> I2
+        G2 --> I2
+        J2["Ontology / Graph Schema (Stable across domains)"] -.-> C2n
+        J2 -.-> D2
+        K2["Configuration & Workflow Mapping (Context-specific)"] --> B2
+        K2 --> F2
+        B2 -.-> L2["⚡ Immediate event capture (No polling delay)"]
+    end
+
+    %% === Comparative Bridges ===
+    B1 ---|Replaced by| B2
+    D1 ---|Enhanced via semantics| C2n
+    E1 ---|Automated by| E2
+    H1 ---|Resolved with| I2
+    I1 ---|Abstracted by| J2
+
+    classDe
+
+
+
+```
